@@ -33,6 +33,7 @@ background-color: #222034;
     background-image: url('./img/ButtonMenu.png');
     background-repeat: no-repeat;
     background-size: cover;
+    border-radius: 80%;
     
 }
 
