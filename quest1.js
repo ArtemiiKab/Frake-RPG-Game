@@ -6,7 +6,7 @@ var quest1 = {
     
     event1 : {
         isFinished:false,
-        text:["Hi traveller, welcome to my totally safe and not vampire invaded mansion!", "I really glad you came. There is a dinner starting really soon!",""],
+        text:["Hi traveller, welcome to my totally safe and not vampire invaded mansion!", "You can use w, a, s, d, to move", "I really glad you came. There is a dinner starting really soon!",""],
     },
     event2 : {
         isFinished:false,
