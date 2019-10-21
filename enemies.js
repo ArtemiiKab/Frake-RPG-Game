@@ -52,15 +52,7 @@ Enemy = function(name, attackClass, id,x,y,width,height, img, hp, mana, AC, cons
                 self.y -= self.speed;
             }   
             
-              
-                if(currentMap.isTorch(self.bumperUp)){
-                self.y += self.speed;
-                }else if(currentMap.isTorch(self.bumperLeft)){
-                self.x += self.speed;
-                }else if (currentMap.isTorch(self.bumperRight)){
-                self.x -= self.speed;        
-                }
-
+            
             var isColliding = self.testCollision(player);
                 if(isColliding && self.attackClass === "melee"){ 
                         self.attackCounter = 0;

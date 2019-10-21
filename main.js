@@ -50,7 +50,7 @@ Img.goblin_vampire.src = "img/Goblin_Vampire.png";
 Img.upgrade = new Image();
 Img.upgrade.src = "img/mushroom.png";
 Img.map = new Image(); 
-Img.map.src = "img/map2.png";
+Img.map.src = "img/dungeon1.png";
 Img.body = new Image(); 
 Img.body.src = "img/body.png";
 
@@ -224,7 +224,7 @@ Maps = function(id, imgSrc, grid){
                 if (gridY <0 || gridY >= self.grid.length){
                         return true;
                 }
-                if (self.grid[gridY][gridX] === 1){
+                if (self.grid[gridY][gridX] === 1 || self.grid[gridY][gridX] === 6){
                         return true;
                 }else if (self.grid[gridY][gridX] === 0){
                         return false;
@@ -304,7 +304,7 @@ Maps = function(id, imgSrc, grid){
         return self;
 }
 
-currentMap = Maps("dungeon1", "img/map2.png",
+currentMap = Maps("dungeon1", "img/dungeon1.png",
 [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 [1,1,6,1,1,1,1,6,1,1,1,1,1,1,1,1,6,5,6,1],
 [1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1],

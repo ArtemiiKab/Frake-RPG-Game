@@ -37,7 +37,7 @@ generateTorch = function(colX, rowY){
     var width = TILE_SIZE -2; 
     var id = Math.random()
     Img.torch = new Image();
-    Img.torch.src = "./img/torch.png" 
+    Img.torch.src = "./img/torch2.png" 
     img = Img.torch;
    Torch("torch",id,x,y, width, height, img)
 }
