@@ -25,8 +25,6 @@ var quest1 = {
             return true;
         }
     },
-
-
     update(){
         if(quest1.isEvent1Finished() && player.currentEvent === quest1.event1){
             randomlyGenerateEnemy();
