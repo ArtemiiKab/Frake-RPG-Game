@@ -50,8 +50,6 @@ Coffin = function(type, id, x, y, width, height, img){
         coffinList[id] = self;    
 }
 
-
-
 generateCoffin = function(colX, rowY){
     var x = colX*TILE_SIZE + TILE_SIZE
     var y = rowY*TILE_SIZE + TILE_SIZE

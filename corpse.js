@@ -1,6 +1,5 @@
 Corpse = function(type, id,x,y,width,height,img){
  var self = Entity(type,id,x,y,width,height,img); 
-
  corpseList[id] = self;
 }
 

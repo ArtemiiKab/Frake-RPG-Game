@@ -14,7 +14,7 @@ Inventory = function (){
         self.items.push({id:id, amount:amount});
         self.refreshRender();
     }
-    
+
     self.removeItem = function(id, amount){
         for(var i = 0; i < self.items.length; i++){
             if(self.items[i].id === id){
@@ -54,7 +54,6 @@ Inventory = function (){
 
     return self;
 }
-
 
 Item = function(id, name, event){
     var self = {

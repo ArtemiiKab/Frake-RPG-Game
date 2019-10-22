@@ -24,8 +24,7 @@ Torch = function(type, id,x,y,width,height,img){
         }
         self.draw();
     }
-    torchList[id] = self; 
-        
+    torchList[id] = self;       
 }
 
 

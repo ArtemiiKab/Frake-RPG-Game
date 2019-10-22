@@ -360,7 +360,6 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                                         }
                                 }
                                         if(self.attackCounter>25){
-                                       
                                         self.attacking = false;
                                         Img.walking = new Image();
                                         Img.walking.src = `./img/`+self.name+`.png`      

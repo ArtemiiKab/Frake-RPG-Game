@@ -72,7 +72,6 @@ generateBullet = function(actor, aimOverwrite, bulletType){
         damage = actor.dexterity*5 + actor.strength + Math.floor(Math.random()*10)
     }
     var id = Math.random();
-   
     var angle;
     if(aimOverwrite !== undefined){
         angle = aimOverwrite;

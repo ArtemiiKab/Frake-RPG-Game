@@ -1,13 +1,9 @@
 Vampire = function(name, attackClass, id,x,y,width,height, img, hp, mana, AC, constitution, strength, dexterity, intellect, wisdom, bulletType){
     var self = Enemy(name,attackClass,id,x,y,width,height,img, hp, mana, AC, constitution, strength, dexterity, intellect, wisdom, bulletType);
 
-   // self.width = 100;
-   // self.height = 100;
     self.vampBlastCounter = 0;
     self.vampHealCounter = 0;
     self.bulletType2 = "bloodball";
-
-
 
     self.performSpecialAttack = function(){
         var angle = 0;

@@ -3,7 +3,6 @@ var quest1 = {
     isStarted:false,
     isEnemyWave1Released :false,
     isFinished : false,
-    
     event1 : {
         isFinished:false,
         text:["Hi traveller, welcome to my totally safe and not vampire invaded mansion!", "You can use w, a, s, d, to move", "I really glad you came. Our dinner starts really soon!",""],

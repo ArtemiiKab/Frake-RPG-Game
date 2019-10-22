@@ -112,5 +112,4 @@ targetGenerateEnemy = function(x, y){
         }else {
                 Vampire("Goblin_Vampire","melee", id,x,y,width,height, Img.goblin_vampire, 1000, 200, 12, 10, 10, 14, 10, 5, "frostball");
         }  
-
 }

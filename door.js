@@ -17,7 +17,6 @@ Door = function(type, id,x,y,width,height,img){
         ctx.restore();
         }
     
-
     self.update = function(){
 
         if(self.isOpened){

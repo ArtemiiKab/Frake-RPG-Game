@@ -135,13 +135,11 @@ flipPage = function(){
         pageNumber++;
     }
 } 
-
 showDeathMenu = function(){
     document.getElementById('onDeathMenu').innerHTML = '<button id = "btn-start-game" style = "position: absolute; left:40%; top:80%; width:15%; height:10%; z-index:100;" onclick = "startNewGame()">New Game</button><div id = "deathMenu" style = "position:absolute; width:100%;height:100%; background-color:grey; text-align:center;">'+ player.deathCause + '</div>'
     document.getElementById('menu').style.display = "none";
     document.getElementById('onDeathMenu').style.display = "block";
 } 
-
 hideDeathMenu = function(){
     document.getElementById('onDeathMenu').innerHTML = "";
     document.getElementById('onDeathMenu').style.display = "none;"

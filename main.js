@@ -301,7 +301,6 @@ Maps("dungeon2", "img/map4.png",
 ]);
 
 
- 
 player = Player(); 
 playerInventory = Inventory();
 startNewGame = function(){

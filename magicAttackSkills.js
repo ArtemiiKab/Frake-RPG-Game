@@ -28,7 +28,6 @@ PhysicalAttackSkill = function(id){
 }
 
 PhysicalAttackSkill.list = {};
-
 PhysicalAttackSkill("arrow");
 PhysicalAttackSkill("frostball");
 PhysicalAttackSkill("fireball");

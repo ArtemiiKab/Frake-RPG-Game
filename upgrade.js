@@ -27,7 +27,6 @@ Upgrade = function (id,x,y,width,height,category,img){
                 self.lootframeCount = 0;
             }
         
-
         var isColliding = player.testCollision(self);
             if(isColliding){
                     if(self.category === 'heal')

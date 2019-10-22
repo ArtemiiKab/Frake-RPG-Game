@@ -12,7 +12,6 @@ Npc = function(name, quest, id, x,y,width,height, img, hp, mana, AC, constitutio
     }
 
     
-    
     var super_draw = self.draw; 
     self.draw = function(){
             super_draw(); 

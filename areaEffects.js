@@ -17,7 +17,6 @@ Effect = function(name, id, x, y, width, height, img){
         ctx.drawImage(self.img, walk * frameWidth, 0, frameWidth, frameWidth, x - (TILE_SIZE*1.25), y - (TILE_SIZE*1.4) + 2, self.width*2.8, self.height*1.8)
         ctx.restore();
     }
-
     self.update = function(){
         if(self.effectframeCount < 300){
             self.effectframeCount += 10;
