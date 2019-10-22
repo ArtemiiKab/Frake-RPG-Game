@@ -107,62 +107,40 @@ update = function(){
                 ctx.fillText("Paused", WIDTH/2, HEIGHT/2)
                 return;
         }
-
-        
+        if(player.dead){
+                ctx.fillText("", WIDTH/2, HEIGHT/2)
+                return;
+        }
         ctx.clearRect(0,0,WIDTH,HEIGHT);
         healthBar.clearRect(0,0,WIDTH,HEIGHT)
         currentMap.draw();
         frameCount++;
         score++; 
-        updateTextMenu();
-        updateShowQuests();
-        quest1.update();
        
-        if(frameCount % 25 === 0) { //every 1 sec
-                if(player.hp < player.hpMax)
-                player.hp += player.hpRegen;
-                if(player.mana < player.manaMax)
-                player.mana += player.manaRegen;
-        }    
-                 
-        
         for(var key in corpseList){
                 corpseList[key].update(); 
         }
-
-       
         for (var key in trapList){
-                trapList[key].update();
-                    
+                trapList[key].update();           
         }
-
         for (var key in coffinList){
-                coffinList[key].update();
-                    
+                coffinList[key].update();          
         }
-
         for (var key in doorList){
-                doorList[key].update();
-                    
+                doorList[key].update();          
         }
-
         for(var key in upgradeList){
                 upgradeList[key].update(); 
         }
         for(var key in bulletList){
                 bulletList[key].update();   
         }
-
-       
-        
         for(var key in questList){
                 questList[key].update();     
         }
-
         for(var key in torchList){
                 torchList[key].update();     
         }
-        
         for(var key in npcList){
                 npcList[key].update();
                 if(npcList[key].hp <= 0){
@@ -170,7 +148,6 @@ update = function(){
                      delete npcList[key]
                 }
         }
-       
         for(var key in enemyList){
                 enemyList[key].update();
                 if(enemyList[key].hp <= 0){
@@ -187,22 +164,13 @@ update = function(){
         }
 
         player.update(); 
+        updateUI();//only after player update!
 
         for(var key in effectList){
                 effectList[key].update();     
         }  
 
-        healthBar.fillText(player.hp +'/'+ player.hpMax, 26, 17);
-        healthBar.fillText(player.mana +'/'+ player.manaMax, 30, 37);
-        document.getElementById("constitutionDiv").innerHTML = player.constitution;
-        document.getElementById("strengthDiv").innerHTML =  player.strength;
-        document.getElementById("dexterityDiv").innerHTML =  player.dexterity;
-        document.getElementById("intellectDiv").innerHTML =  player.intellect;
-        document.getElementById("wisdomDiv").innerHTML =  player.wisdom;
-        document.getElementById("skillPoints").innerHTML = "SKILL POINTS: " + player.skillPoints;
        
-        ctx.fillText(player.hp + " Hp",0,30);
-        ctx.fillText('Score: ' + score,200,30);
 }
  
 
@@ -337,8 +305,10 @@ Maps("dungeon2", "img/map4.png",
 player = Player(); 
 playerInventory = Inventory();
 startNewGame = function(){
-      
+        hideDeathMenu();
         currentMap = mapList["dungeon1"];
+        player.dead = false;
+        player.deathCause = "Wow, you're still alive, that's impressive... Are you sure you want to leave?"
         player.hp = player.hpMax;
         player.mana = player.manaMax;
         player.x= (TILE_SIZE*2 - TILE_SIZE/2)

@@ -27,6 +27,9 @@ Effect = function(name, id, x, y, width, height, img){
             }
         if(self.testCollision(player)&& self.effectframeCount > 150){
             player.hp -= (10 - player.magicDamageResist);
+            if(player.hp <= 0){
+                player.deathCause = "You got killed by " + self.name + "Try using counterspell, you are a wizzard, damn!"
+            } 
         }
         for(var key in enemyList){
             if(self.testCollision(enemyList[key]) && self.effectframeCount > 150){

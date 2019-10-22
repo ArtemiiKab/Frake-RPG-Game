@@ -1,3 +1,18 @@
+var menu = document.getElementById('menu').innerHTML;
+
+
+
+updateUI = function(){
+    updateHeroStatBoxes();
+    updateTextMenu();
+    updateShowQuests();
+    if(player.health <= 0){
+        showDeathMenu();
+    }
+}
+
+
+
 openMenu = function(){ 
     document.getElementById('menu').style.display = "block"; 
 } 
@@ -29,8 +44,7 @@ showSkills = function(){
 
 addConstitution = function(){
     player.constitution += 1; 
-    player.skillPoints -= 1; 
-    
+    player.skillPoints -= 1;  
 }
 
 addStrength = function(){
@@ -83,6 +97,21 @@ updateSkillBoxes = function(){
     if(healPotion.length === 0){
         document.getElementById('fourthSkill').innerHTML = "X : 0"
     }
+} 
+
+updateHeroStatBoxes = function(){
+    healthBar.fillText(player.hp +'/'+ player.hpMax, 26, 17);
+    healthBar.fillText(player.mana +'/'+ player.manaMax, 30, 37);
+    document.getElementById("constitutionDiv").innerHTML = player.constitution;
+    document.getElementById("strengthDiv").innerHTML =  player.strength;
+    document.getElementById("dexterityDiv").innerHTML =  player.dexterity;
+    document.getElementById("intellectDiv").innerHTML =  player.intellect;
+    document.getElementById("wisdomDiv").innerHTML =  player.wisdom;
+    document.getElementById("skillPoints").innerHTML = "SKILL POINTS: " + player.skillPoints;
+   
+    ctx.fillText(player.hp + " Hp",0,30);
+    ctx.fillText('Score: ' + score,200,30);
+
 }
 
 $(document).on('click','.skill-column2', function(){$(this).addClass("borderChoosen").siblings().removeClass("borderChoosen")});
@@ -105,4 +134,15 @@ flipPage = function(){
     if(pageNumber < player.currentEvent.text.length-1){
         pageNumber++;
     }
+} 
+
+showDeathMenu = function(){
+    document.getElementById('onDeathMenu').innerHTML = '<button id = "btn-start-game" style = "position: absolute; left:40%; top:80%; width:15%; height:10%; z-index:100;" onclick = "startNewGame()">New Game</button><div id = "deathMenu" style = "position:absolute; width:100%;height:100%; background-color:grey; text-align:center;">'+ player.deathCause + '</div>'
+    document.getElementById('menu').style.display = "none";
+    document.getElementById('onDeathMenu').style.display = "block";
+} 
+
+hideDeathMenu = function(){
+    document.getElementById('onDeathMenu').innerHTML = "";
+    document.getElementById('onDeathMenu').style.display = "none;"
 }

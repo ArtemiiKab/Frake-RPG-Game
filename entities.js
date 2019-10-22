@@ -13,10 +13,11 @@ var howManyHealPotions = 0;
  
 Player = function(){
         var self = Actor('player','myId',(TILE_SIZE*2 - TILE_SIZE/2), (TILE_SIZE*3 - TILE_SIZE/2), 80, 80, Img.player, 1000, 300, 6, 10, 10, 10, 10, 10, "arrow"); 
+        self.dead = false;
         self.currentQuest = "none";
         self.currentEvent = "none";
         self.killCount = 0;
-        
+        self.deathCause = "Wow, you're still alive, that's impressive... Are you sure you want to leave?"
         self.hpRegen = 2;
         self.manaRegen = 2;
         self.hp = self.constitution*100;
@@ -26,8 +27,6 @@ Player = function(){
         self.atkSpd = Math.floor(self.dexterity/10);
         self.atkSpdMod = 0;
         self.bulletType2 ="fireball"; 
-
-        
 
         self.PhysicalAttackList = ["arrow","frostball","fireball"]
         self.showPhysicalAttacks = function(){
@@ -39,8 +38,6 @@ Player = function(){
                 }
         }
         self.showPhysicalAttacks()
-
-
         self.magicAttackList = [{name:"Triple Freeze", parent:"frostball"},{name:"Ring of Fire", parent:"fireball"}];
         self.showMagicAttacks = function(){
                 for(i = 0; i < self.magicAttackList.length; i++){
@@ -51,10 +48,6 @@ Player = function(){
                 }
         }
         self.showMagicAttacks();
-
-
-
-
 
         var super_draw = self.draw; 
         self.draw = function(){
@@ -73,19 +66,13 @@ Player = function(){
             ctx.strokeStyle = "black";
             ctx.strokeRect(x-50, y, 100, 10)
             ctx.restore();
-
-            
             healthBar.fillStyle ="red";
             healthBar.fillRect(0, 0, width, 20)
             healthBar.fillStyle = "blue";
             healthBar.fillRect(0, 20, manaWidth, 20)
-
             healthBar.strokeStyle = "black";
             healthBar.strokeRect(0,0,100,20);
             healthBar.strokeRect(0,20,100,20);
-
-
-            
             healthBar.restore();
 
           
@@ -142,6 +129,13 @@ Player = function(){
         self.manaRegen = Math.floor(self.wisdom/5);
         self.atkSpd = Math.floor(self.dexterity/10) + self.atkSpdMod;
         self.speed = Math.floor(self.dexterity - Math.floor((self.constitution/10)))-1;
+
+        if(frameCount % 25 === 0) { //every 1 sec
+                if(player.hp < player.hpMax)
+                player.hp += player.hpRegen;
+                if(player.mana < player.manaMax)
+                player.mana += player.manaRegen;
+        }    
         
 
         if(self.skillPoints <= 0){
@@ -157,8 +151,10 @@ Player = function(){
         }
         if(self.hp <= 0){
                 var timeSurvived = Date.now() - timeWhenGameStarted;           
-                console.log("You lost! You survived for " + timeSurvived + " ms.");            
-                startNewGame();
+                console.log("You lost! You survived for " + timeSurvived + " ms.");       
+                showDeathMenu(); 
+                generateCorpse(self);
+                self.dead = true;
             }
     }  
         self.pressingDown = false;
@@ -267,6 +263,9 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                 for(var key in trapList){
                                 if(trapList[key].trapframeCount >100 && trapList[key].testCollision({x:self.x, y:(self.y+(self.height/2)), width:self.width, height:1})){
                                         self.hp -=(10 - Math.floor(self.physDamageResist/10));
+                                        if(player.hp <= 0){
+                                                player.deathCause = "You died stupid and totally not a heroic death in the middle of the dungeon. Be careful with traps next time"
+                                        }
                                 }        
                 }
 
@@ -349,6 +348,13 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                                 self.speed = 0;  
                                 if(self.testCollision(player)){
                                         player.hp -= ((self.strength-Math.floor(player.physDamageResist/self.strength))/**2*/)
+                                        if(player.hp <= 0){
+                                                if(self.name === "Goblin_Vampire"){
+                                                        player.deathCause = "You died by trying to hug a Vampire. They are sexy, but try running from them next time!"
+                                                }else{
+                                                player.deathCause = "You died by being stabbed in the ass. That's a shitty death damn!"
+                                                }
+                                        } 
                                         if(self.name === "Goblin_Vampire" && self.hp < self.hpMax){
                                                 self.hp += ((self.strength-Math.floor(player.physDamageResist/self.strength))/**2*/)
                                         }

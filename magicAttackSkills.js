@@ -3,10 +3,7 @@ MagicAttackSkill = function(id){
         id:id,
     }
     self.event = function(){
-        player.bulletType2 = self.id;
-        //document.getElementById(self.id).style.backgroundColor = "green";
-       
-        
+        player.bulletType2 = self.id;  
     }
     MagicAttackSkill.list[self.id] = self;
     return self;
@@ -15,16 +12,7 @@ MagicAttackSkill = function(id){
 MagicAttackSkill.list = {};
 
 MagicAttackSkill ("frostball");
-
 MagicAttackSkill ("fireball"); 
-
-
-
-
-
-
-
-
 
 
 

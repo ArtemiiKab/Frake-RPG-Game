@@ -44,7 +44,10 @@ Bullet = function (id, bulletType, x, y, spdX, spdY, width, height, combatType, 
             var isColliding = self.testCollision(player);
             if(isColliding){
                 player.hp -= (self.damage - player.magicDamageResist);
-                toRemove = true;     
+                toRemove = true; 
+                if(player.hp <= 0){
+                    player.deathCause = "You died by running directly into a " + self.bulletType + ". Try opening your eyes while playing."
+                } 
             }  
         }
         if(currentMap.isPositionWall(self)||currentMap.isTorch(self)){

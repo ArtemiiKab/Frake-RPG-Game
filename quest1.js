@@ -6,7 +6,7 @@ var quest1 = {
     
     event1 : {
         isFinished:false,
-        text:["Hi traveller, welcome to my totally safe and not vampire invaded mansion!", "You can use w, a, s, d, to move", "I really glad you came. There is a dinner starting really soon!",""],
+        text:["Hi traveller, welcome to my totally safe and not vampire invaded mansion!", "You can use w, a, s, d, to move", "I really glad you came. Our dinner starts really soon!",""],
     },
     event2 : {
         isFinished:false,
@@ -17,9 +17,6 @@ var quest1 = {
         isFinished:false,
         text:["Damn you are good! It makes me angry!"," Okay, lets go forward then, open that door please", "I could open it myself, ofcourse, cause I'm not a vampire", "See you on the other side, bye!",""],
     },
-
-    
- 
 
     isEvent1Finished (){
         if(quest1.event1.text.length === pageNumber+1 && !quest1.event1.isFinished && player.currentEvent === quest1.event1 ){

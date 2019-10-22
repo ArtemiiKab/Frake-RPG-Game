@@ -17,7 +17,9 @@ background-color: #222034;
     text-align: center;
     border: 2px solid;
     border-color: azure; 
-    background-color: #222034;
+    background-color: #222034; 
+    padding-left:2%;
+    padding-right:2%;
    
 }
 
@@ -41,6 +43,21 @@ background-color: #222034;
     
     display:none;
 }
+#deathMenu{
+    color:white;
+    font-size: 2vw;
+    padding-top:15%;
+    padding-left: 5%;
+    padding-right: 5%;
+    opacity: 1;
+}
+
+#btn-start-game{
+    background-color:white;
+    color:black;
+}
+
+
 
 #btn-close-menu{
     border-radius: 50%;
