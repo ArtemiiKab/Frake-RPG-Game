@@ -3,9 +3,9 @@ var menu = document.getElementById('menu').innerHTML;
 
 
 updateUI = function(){
-    updateHeroStatBoxes();
     updateTextMenu();
     updateShowQuests();
+    updateHeroStatBoxes();
     if(player.health <= 0){
         showDeathMenu();
     }
@@ -75,9 +75,9 @@ showQuests = function(){
 }
 
 updateShowQuests = function(){
-    document.getElementById('quests').innerHTML = "";
+    document.getElementById('questList').innerHTML = "";
     for(var key in questList){
-        document.getElementById('quests').innerHTML += questList[key].name;
+        document.getElementById('questList').innerHTML += "<div style = 'width: 100%; height:15%; border:2px solid; border-color:azure; color:white;'>" + questList[key].name + "</div>";
     }
 }
 
@@ -115,7 +115,7 @@ updateHeroStatBoxes = function(){
 }
 
 $(document).on('click','.skill-column2', function(){$(this).addClass("borderChoosen").siblings().removeClass("borderChoosen")});
-
+$(document).on('click','.invLeft', function(){$(this).addClass("inv-left-choosen").siblings().removeClass("inv-left-choosen")});
 let textMenu = document.getElementById('UpCenterTextMenu');
 var pageNumber = 0
 updateTextMenu = function(){
@@ -136,11 +136,13 @@ flipPage = function(){
     }
 } 
 showDeathMenu = function(){
-    document.getElementById('onDeathMenu').innerHTML = '<button id = "btn-start-game" style = "position: absolute; left:40%; top:80%; width:15%; height:10%; z-index:100;" onclick = "startNewGame()">New Game</button><div id = "deathMenu" style = "position:absolute; width:100%;height:100%; background-color:grey; text-align:center;">'+ player.deathCause + '</div>'
+    document.getElementById('onDeathMenu').innerHTML = '<button id = "btn-start-game" style = "position: absolute; left:40%; top:80%; width:15%; height:10%; z-index:100;" onclick = "startNewGame()">New Game</button><div id = "deathMenu" style = "position:absolute; width:100%;height:100%; background-color:#323c39; border:2px solid; border-color:azure; text-align:center;">'+ player.deathCause + '</div>'
     document.getElementById('menu').style.display = "none";
+    document.getElementById('btn-open-menu').style.display = "none";
     document.getElementById('onDeathMenu').style.display = "block";
 } 
 hideDeathMenu = function(){
     document.getElementById('onDeathMenu').innerHTML = "";
     document.getElementById('onDeathMenu').style.display = "none;"
+    document.getElementById('btn-open-menu').style.display = "block";
 }

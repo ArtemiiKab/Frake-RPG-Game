@@ -12,6 +12,24 @@ box-sizing:border-box;
 background-color: #222034;
 } 
 
+
+#chooseBarbarian{
+    background-image: url("./img/chooseBarbarian.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 80%;   
+    background-color: #222034;
+} 
+
+#chooseWizard{
+    background-image: url("./img/chooseWizard.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 70%;  
+    background-color: #222034;
+}
+
+
 #upCenterTextMenu{
     color:white;
     text-align: center;
@@ -32,15 +50,12 @@ background-color: #222034;
 
 #btn-open-menu {
     font-family: MiniSet2;  
-    background-image: url('./img/ButtonMenu.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    border-radius: 80%;
-    
+    background-color:azure;
+    border-radius: 80%;  
 }
 
 #menu{
-    
+    color:white;
     display:none;
 }
 #deathMenu{
@@ -58,12 +73,30 @@ background-color: #222034;
 }
 
 
-
 #btn-close-menu{
     border-radius: 50%;
- 
+    background-color:white;
+    color:black;
 
 } 
+
+.invLeft{
+    text-align: center;
+    color: white;
+    font-size: 1.6vw;
+    background-color: #323c39;
+    border: 2px solid; 
+    border-color: azure;
+    padding-top:8%;
+}
+
+.inv-left-choosen{
+    background-color:white;
+    color:black;
+    font-size: 1.6vw;
+    border: 2px solid; 
+    border-color: azure;
+}
 
 #playerHP{
     width:180%;
@@ -82,11 +115,15 @@ background-color: #222034;
 } 
 
 #Potion{
-    background-color: blueviolet;
+    background-color:#323c39; 
+    border: 2px solid;
+    border-color: azure;
 } 
 
 #PotionSpeed{
-    background-color: blue;
+    background-color:#323c39;
+    border: 2px solid; 
+    border-color: azure;
 }
 
 .img-potions{
@@ -108,7 +145,7 @@ background-color: #222034;
 
 .btn-use-potion{
     position: absolute;
-
+    background-color:azure;
     top:20%;
     left: 80%;
     width: 10%;
@@ -117,6 +154,7 @@ background-color: #222034;
 
 #firstSkill{
     border: 2px solid;
+    max-width:100%;
     border-color: azure; 
     background-size:100%;
     background-repeat: no-repeat;
@@ -163,6 +201,6 @@ background-color: #222034;
 .borderChoosen{
 text-align: center;
 border: 2px solid;
-background-color:skyblue;
-
+background-color:white;
+color:#323c39
 }

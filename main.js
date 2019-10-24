@@ -1,3 +1,4 @@
+var isGameStarted = false;
 var ctx = document.getElementById("ctx").getContext("2d");
 var canvas = document.getElementById("ctx");
 var healthBar = document.getElementById("playerHp").getContext("2d")
@@ -37,8 +38,10 @@ window.addEventListener('resize', function(){
 
 
 var Img = {};
-Img.player = new Image();
-Img.player.src = "img/hero.png";
+Img.barbarian = new Image();
+Img.barbarian.src = "img/Barbarian.png";
+Img.wizard = new Image();
+Img.wizard.src = "img/wizard.png";
 Img.goblin = new Image();
 Img.goblin.src = "img/Goblin_Wizard.png";
 Img.goblinLightningWizard = new Image();
@@ -54,10 +57,12 @@ Img.map.src = "img/dungeon1.png";
 Img.body = new Image(); 
 Img.body.src = "img/body.png";
 
-ctx.drawImage(Img.player, 50, 50)
+//ctx.drawImage(Img.player, 50, 50)
  
 document.onclick = function(){
-      player.performAttack();       
+        if(isGameStarted){
+        player.performAttack(); 
+        } 
  }
 
 document.oncontextmenu = function(mouse){
@@ -65,12 +70,15 @@ document.oncontextmenu = function(mouse){
         mouse.preventDefault();
 }
  
-document.onmousemove = function(mouse){
+document.onmousemove = function(mouse){ 
+       if(isGameStarted){
         var mouseX = mouse.clientX - document.getElementById('ctx').getBoundingClientRect().left;
         var mouseY = mouse.clientY - document.getElementById('ctx').getBoundingClientRect().top;
         mouseX -= CANVAS_WIDTH/2;
         mouseY -= CANVAS_HEIGHT/2; 
         player.aimAngle = Math.atan2(mouseY,mouseX) / Math.PI * 180;
+      
+   }
 }
 
 
@@ -301,8 +309,40 @@ Maps("dungeon2", "img/map4.png",
 ]);
 
 
-player = Player(); 
-playerInventory = Inventory();
+//player = Player(); 
+
+
+chooseBarbarian = function(){
+        document.getElementById('chooseWizard').style.display = "none";
+        document.getElementById('chooseHero').style.display = "none";
+        document.getElementById('btn-choose-barbarian').style.display = "none";
+        document.getElementById('barbarianInfoMenu').style.display = "block";
+        document.getElementById('startGame').style.display = "block";
+        player = Player("player", "barbarian", (TILE_SIZE*2 - TILE_SIZE/2), (TILE_SIZE*3 - TILE_SIZE/2), 90, 90, Img.barbarian, 1000, 50, 10, 10, 10, 8, 3, 2, "SwordStrike")
+}
+
+chooseMage = function(){
+        document.getElementById('chooseBarbarian').style.display = "none";
+        document.getElementById('chooseHero').style.display = "none";
+        document.getElementById('btn-choose-wizard').style.display = "none";
+        document.getElementById('wizardInfoMenu').style.display = "block";
+        document.getElementById('startGame').style.display = "block";
+        player = Player("player", "wizard", (TILE_SIZE*2 - TILE_SIZE/2), (TILE_SIZE*3 - TILE_SIZE/2), 80, 80, Img.wizard, 600, 300, 6, 6, 6, 8, 8, 7, "fireball")
+
+        
+}
+
+startGame = function(){ 
+        document.getElementById('startMenu').style.display = "none";
+        document.getElementById('welcomeMessage').style.display = "none";
+        document.getElementById('ui').style.display = "block";
+        playerInventory = Inventory();
+        isGameStarted = true;
+        startNewGame();
+        setInterval(update,40); 
+}
+//player = Player(); 
+//playerInventory = Inventory();
 startNewGame = function(){
         hideDeathMenu();
         currentMap = mapList["dungeon1"];
@@ -344,7 +384,8 @@ startNewGame = function(){
        // randomlyGenerateEnemy();
        // randomlyGenerateEnemy();
 }
-startNewGame();
 
-setInterval(update,40); 
+
+//startNewGame();
+
 

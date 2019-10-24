@@ -11,9 +11,10 @@ var torchList = {};
 var howManyHealPotions = 0;
  
  
-Player = function(){
-        var self = Actor('player','myId',(TILE_SIZE*2 - TILE_SIZE/2), (TILE_SIZE*3 - TILE_SIZE/2), 80, 80, Img.player, 1000, 300, 6, 10, 10, 10, 10, 10, "arrow"); 
+Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution, strength, dexterity, intellect, wisdom, bulletType){
+        var self = Actor(type, id, x, y, width, height, img, hp, mana, AC, constitution, strength, dexterity, intellect, wisdom, bulletType); 
         self.dead = false;
+        self.isAttacking = false;
         self.currentQuest = "none";
         self.currentEvent = "none";
         self.killCount = 0;
@@ -24,11 +25,15 @@ Player = function(){
         self.skillPoints = 2; 
         self.manaMax = Math.floor((self.intellect*100)/3)
         self.mana = Math.floor((self.intellect*100)/3)
-        self.atkSpd = Math.floor(self.dexterity/10);
+        self.atkSpd = 1.4 //Math.floor(self.dexterity/5);
         self.atkSpdMod = 0;
         self.bulletType2 ="fireball"; 
-
-        self.PhysicalAttackList = ["arrow","frostball","fireball"]
+        
+        if(self.id === "wizard"){
+                self.PhysicalAttackList = ["frostball","fireball"]
+        } else if(self.id === "barbarian"){
+                self.PhysicalAttackList = ["SwordStrike"]
+        }
         self.showPhysicalAttacks = function(){
                 for(i = 0; i < self.PhysicalAttackList.length; i++){
                         let skill = self.PhysicalAttackList[i];
@@ -123,11 +128,26 @@ Player = function(){
         super_update(); 
         updateSkillBoxes();
         
+        if(self.isAttacking){
+                Img.attackImg = new Image();
+                Img.attackImg.src = `./img/`+ self.id+`Attack.png`      
+                player.img = Img.attackImg;
+                self.attackAnimeCounter+=5;
+                if(self.attackAnimeCounter > 70){
+                        self.attackAnimeCounter = 0;
+                        self.attackCounter = 0; 
+                        self.isAttacking = false;
+                        Img.attackImg = new Image();
+                        Img.attackImg.src = `./img/`+ self.id+`.png`;
+                        self.img = Img.attackImg;
+                }
+        }
+        
         self.hpMax = self.constitution*100;
         self.manaMax = Math.floor((self.intellect*100)/3)
         self.hpRegen = Math.floor(self.constitution/5);
         self.manaRegen = Math.floor(self.wisdom/5);
-        self.atkSpd = Math.floor(self.dexterity/10) + self.atkSpdMod;
+        self.atkSpd = 1.4 + self.atkSpdMod//Math.floor(self.dexterity/5) + self.atkSpdMod;
         self.speed = Math.floor(self.dexterity - Math.floor((self.constitution/10)))-1;
 
         if(frameCount % 25 === 0) { //every 1 sec
@@ -253,6 +273,7 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
         self.speedStart = self.speed;
         self.spriteAnimCounter = 0;
         self.bulletSize = 50;
+        self.attackAnimeCounter = 0;
        
      
         var super_update = self.update;
@@ -305,21 +326,25 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                 } else if (aimAngle >= 225 && aimAngle < 315){//up
                         self.directionMod = 0;
                 }
-                
                 var walkingMod = Math.floor(self.spriteAnimCounter) % 3;
-
+                
+                if(self === player && player.isAttacking){
+                        var walk = Math.floor(self.attackAnimeCounter/25)
+                        ctx.drawImage(self.img, walk * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height) 
+                } else {
+                      
                 ctx.drawImage(self.img, walkingMod * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height)
+                }
                 ctx.restore();
         }
 
         self.onDeath = function(){};
        
         self.performAttack = function(){
-                if(self.type === "player"){
-                        if(self.attackCounter > 25){
-                        self.attackCounter = 0; 
+                if(self.type === "player" && player.attackCounter > 25){
+                        player.isAttacking = true;
                         generateBullet(self, self.aimAngle, self.bulletType);
-                        }
+                        self.attackCounter = 0; 
                 } else {
                         if(self.attackClass === "spell"){
                                 if(self.attackCounter > 25){    //every 1 sec
@@ -399,6 +424,7 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                 if(player.bulletType2 === "frostball"){
                         if(self.attackCounter > 50 && self.mana >= 20){    //every 1 sec
                         self.attackCounter = 0;
+                        player.isAttacking = true;
                         self.mana -= 20;
                         generateBullet(self,self.aimAngle - 5, self.bulletType2);
                         generateBullet(self,self.aimAngle, self.bulletType2);
@@ -407,6 +433,7 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                 }else if (player.bulletType2 ==="fireball"){
                         if(self.attackCounter > 50 && self.mana >= 20){    //every 1 sec
                                 self.attackCounter = 0;
+                                player.isAttacking = true;
                                 self.mana -= 180;
                                 var angle = 0;
                                 while (angle < 360){

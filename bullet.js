@@ -33,7 +33,7 @@ Bullet = function (id, bulletType, x, y, spdX, spdY, width, height, combatType, 
                 var isColliding = self.testCollision(enemyList[key2]);
                 if(isColliding){
                     toRemove = true; 
-                    if(self.bulletType === "arrow"){
+                    if(self.bulletType === "arrow" || self.bulletType === "SwordStrike"){
                         enemyList[key2].hp -= (self.damage - enemyList[key2].physDamageResist)
                     } else if (self.bulletType === "frostball"||self.bulletType === "fireball"){
                         enemyList[key2].hp -=(self.damage - enemyList[key2].magicDamageResist)           
@@ -70,6 +70,8 @@ generateBullet = function(actor, aimOverwrite, bulletType){
     var damage = actor.magicDamage + Math.floor(Math.random()*10);
     if(bulletType === "arrow"){
         damage = actor.dexterity*5 + actor.strength + Math.floor(Math.random()*10)
+    }else if(bulletType === "SwordStrike"){
+        damage = actor.strength*10 + actor.dexterity + Math.floor(Math.random()*10)
     }
     var id = Math.random();
     var angle;
@@ -116,6 +118,11 @@ generateBullet = function(actor, aimOverwrite, bulletType){
     //spdX = Math.cos(angle/180*Math.PI)*15;
     //spdY = Math.sin(angle/180*Math.PI)*15; 
     //damage = 10;
+    }
+
+    if(bulletType === "SwordStrike"){
+    width = 40;
+    height = 40;
     }
 
     Bullet(id, bulletType, x, y, spdX, spdY, width, height, actor.type, img, damage)
