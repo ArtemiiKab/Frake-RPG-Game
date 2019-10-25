@@ -31,3 +31,5 @@ PhysicalAttackSkill.list = {};
 PhysicalAttackSkill("arrow");
 PhysicalAttackSkill("frostball");
 PhysicalAttackSkill("fireball");
+PhysicalAttackSkill("SwordStrike");
+PhysicalAttackSkill("Rage");

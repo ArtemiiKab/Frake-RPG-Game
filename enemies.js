@@ -2,13 +2,19 @@ Enemy = function(name, attackClass, id,x,y,width,height, img, hp, mana, AC, cons
     var self = Actor('enemy',id,x,y,width,height,img, hp, mana, AC, constitution, strength, dexterity, intellect, wisdom, bulletType);
         
     self.toRemove = false;
-    
+    self.isScared = false;
+    self.scaredCounter = 0;
     self.name = name; 
     self.attackClass = attackClass;
     self.updateAim = function(){
         var diffX = player.x - self.x; 
         var diffY = player.y - self.y; 
         self.aimAngle = Math.atan2(diffY, diffX)/ Math.PI *180;
+        if(self.isScared){
+                self.aimAngle = - Math.atan2(diffX, diffY)/ Math.PI *180;  
+                self.attackCounter = 0; 
+              
+        }
     }
 
     var super_draw = self.draw; 
@@ -52,6 +58,19 @@ Enemy = function(name, attackClass, id,x,y,width,height, img, hp, mana, AC, cons
                 self.y -= self.speed;
             }   
             
+            if(self.isScared){
+                if(diffX > self.speed/2+0.1 && !currentMap.isPositionWall(self.bumperLeft)){
+                        self.x -= self.speed*2;
+                }else if(diffX < -(self.speed/2+0.1) && !currentMap.isPositionWall(self.bumperRight)){
+                        self.x += self.speed*2;
+                }
+                if(diffY > self.speed/2+0.1 && !currentMap.isPositionWall(self.bumperUp)){
+                    self.y -= self.speed*2;
+                }else if(diffY < -(self.speed/2+0.1) && !currentMap.isPositionWall(self.bumperDown)){
+                    self.y += self.speed*2;
+                }        
+            }
+            
             
             var isColliding = self.testCollision(player);
                 if(isColliding && self.attackClass === "melee"){ 
@@ -65,6 +84,13 @@ Enemy = function(name, attackClass, id,x,y,width,height, img, hp, mana, AC, cons
     var super_update = self.update;
     self.update = function(){
         super_update();
+        if(self.isScared){//barbarianRageSkill
+                self.scaredCounter ++;
+                if(self.scaredCounter >= 30){
+                        self.isScared = false;
+                        self.scaredCounter = 0;
+                }
+        }
         self.spriteAnimCounter += 0.2;
         self.updateAim();
         self.performAttack(); 

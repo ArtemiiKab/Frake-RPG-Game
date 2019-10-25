@@ -1,14 +1,15 @@
 var isGameStarted = false;
+var choosenClass = "";
 var ctx = document.getElementById("ctx").getContext("2d");
 var canvas = document.getElementById("ctx");
 var healthBar = document.getElementById("playerHp").getContext("2d")
 var heightRatio = 0.05;
 healthBar.height = healthBar.width * heightRatio;
 var mapList = {};
-var HEIGHT = 768 //530;
-var WIDTH = 1705//960;
+var HEIGHT = 768;
+var WIDTH = 1705;
 var CANVAS_WIDTH = 1705;
-var CANVAS_HEIGHT = 768
+var CANVAS_HEIGHT = 768;
 var TILE_SIZE = 96;
 var timeWhenGameStarted = Date.now();   //return time in ms
 var frameCount = 0;
@@ -50,8 +51,7 @@ Img.goblin_warrior = new Image();
 Img.goblin_warrior.src = "img/Goblin_Warrior.png";
 Img.goblin_vampire = new Image();
 Img.goblin_vampire.src = "img/Goblin_Vampire.png";
-Img.upgrade = new Image();
-Img.upgrade.src = "img/mushroom.png";
+
 Img.map = new Image(); 
 Img.map.src = "img/dungeon1.png";
 Img.body = new Image(); 
@@ -170,18 +170,14 @@ update = function(){
         if(frameCount % 75 === 0)       //every 3 sec
         randomlyGenerateUpgrade(); 
         }
-
         player.update(); 
         updateUI();//only after player update!
 
         for(var key in effectList){
                 effectList[key].update();     
-        }  
-
-       
+        }       
 }
  
-
 Maps = function(id, imgSrc, grid){
         var self = {
                 id:id,
@@ -318,31 +314,49 @@ chooseBarbarian = function(){
         document.getElementById('btn-choose-barbarian').style.display = "none";
         document.getElementById('barbarianInfoMenu').style.display = "block";
         document.getElementById('startGame').style.display = "block";
-        player = Player("player", "barbarian", (TILE_SIZE*2 - TILE_SIZE/2), (TILE_SIZE*3 - TILE_SIZE/2), 90, 90, Img.barbarian, 1000, 50, 10, 10, 10, 8, 3, 2, "SwordStrike")
+        document.getElementById('backToChooseHero').style.display = "block";
+        choosenClass = "barbarian";  
 }
 
-chooseMage = function(){
+chooseWizard = function(){
         document.getElementById('chooseBarbarian').style.display = "none";
         document.getElementById('chooseHero').style.display = "none";
         document.getElementById('btn-choose-wizard').style.display = "none";
         document.getElementById('wizardInfoMenu').style.display = "block";
         document.getElementById('startGame').style.display = "block";
-        player = Player("player", "wizard", (TILE_SIZE*2 - TILE_SIZE/2), (TILE_SIZE*3 - TILE_SIZE/2), 80, 80, Img.wizard, 600, 300, 6, 6, 6, 8, 8, 7, "fireball")
+        document.getElementById('backToChooseHero').style.display = "block";
+        choosenClass = "wizard";  
+}
 
-        
+backToChooseHero = function(){
+        document.getElementById('chooseBarbarian').style.display = "block";  
+        document.getElementById('chooseWizard').style.display = "block";
+        document.getElementById('btn-choose-barbarian').style.display = "block";
+        document.getElementById('btn-choose-wizard').style.display = "block";
+        document.getElementById('chooseHero').style.display = "block";
+
+        document.getElementById('wizardInfoMenu').style.display = "none";
+        document.getElementById('startGame').style.display = "none";
+        document.getElementById('backToChooseHero').style.display = "none";
+        document.getElementById('barbarianInfoMenu').style.display = "none";
 }
 
 startGame = function(){ 
         document.getElementById('startMenu').style.display = "none";
         document.getElementById('welcomeMessage').style.display = "none";
         document.getElementById('ui').style.display = "block";
+
+        if(choosenClass === "barbarian"){
+                player = Player("player", "barbarian", (TILE_SIZE*2 - TILE_SIZE/2), (TILE_SIZE*3 - TILE_SIZE/2), 90, 90, Img.barbarian, 1000, 50, 10, 10, 10, 8, 3, 2, "SwordStrike")
+        } else if (choosenClass === "wizard"){
+                player = Player("player", "wizard", (TILE_SIZE*2 - TILE_SIZE/2), (TILE_SIZE*3 - TILE_SIZE/2), 80, 90, Img.wizard, 600, 300, 6, 6, 6, 8, 8, 7, "fireball")
+        }
         playerInventory = Inventory();
         isGameStarted = true;
         startNewGame();
         setInterval(update,40); 
 }
-//player = Player(); 
-//playerInventory = Inventory();
+
 startNewGame = function(){
         hideDeathMenu();
         currentMap = mapList["dungeon1"];
@@ -380,12 +394,5 @@ startNewGame = function(){
         textMenu.innerHTML = '';
         pageNumber = 0;
         quest1.isStarted = false;
-       // randomlyGenerateEnemy();
-       // randomlyGenerateEnemy();
-       // randomlyGenerateEnemy();
 }
-
-
-//startNewGame();
-
 

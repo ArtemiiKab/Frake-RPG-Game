@@ -27,12 +27,13 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
         self.mana = Math.floor((self.intellect*100)/3)
         self.atkSpd = 1.4 //Math.floor(self.dexterity/5);
         self.atkSpdMod = 0;
-        self.bulletType2 ="fireball"; 
+        self.bulletType2 ="frostball"; 
         
         if(self.id === "wizard"){
                 self.PhysicalAttackList = ["frostball","fireball"]
         } else if(self.id === "barbarian"){
-                self.PhysicalAttackList = ["SwordStrike"]
+                self.PhysicalAttackList = ["SwordStrike", "arrow", "Rage"];
+                self.bulletType2 ="fireball";
         }
         self.showPhysicalAttacks = function(){
                 for(i = 0; i < self.PhysicalAttackList.length; i++){
@@ -343,7 +344,16 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
         self.performAttack = function(){
                 if(self.type === "player" && player.attackCounter > 25){
                         player.isAttacking = true;
+                        if(player.bulletType === "Rage"){
+                                for(var key in enemyList ){
+                                        if(enemyList[key].testCollision({x:player.x, y:player.y, width:player.width*8, height:player.height*8}))
+                                        enemyList[key].isScared = true;
+                                }
+                        
+                        } else{
+                         
                         generateBullet(self, self.aimAngle, self.bulletType);
+                        }
                         self.attackCounter = 0; 
                 } else {
                         if(self.attackClass === "spell"){
