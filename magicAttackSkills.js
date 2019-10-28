@@ -13,6 +13,7 @@ MagicAttackSkill.list = {};
 
 MagicAttackSkill ("frostball");
 MagicAttackSkill ("fireball"); 
+MagicAttackSkill ("Rage"); 
 
 
 

@@ -14,7 +14,7 @@ var TILE_SIZE = 96;
 var timeWhenGameStarted = Date.now();   //return time in ms
 var frameCount = 0;
 var paused = false;
-var score = 0;
+var score = 0; 
 
 let resizeCanvas = function(){
         CANVAS_WIDTH = window.innerWidth -4;
@@ -51,17 +51,19 @@ Img.goblin_warrior = new Image();
 Img.goblin_warrior.src = "img/Goblin_Warrior.png";
 Img.goblin_vampire = new Image();
 Img.goblin_vampire.src = "img/Goblin_Vampire.png";
-
 Img.map = new Image(); 
 Img.map.src = "img/dungeon1.png";
 Img.body = new Image(); 
 Img.body.src = "img/body.png";
 
-//ctx.drawImage(Img.player, 50, 50)
+
  
 document.onclick = function(){
         if(isGameStarted){
         player.performAttack(); 
+     /*  var x =  player.x + player.targetX
+       var y =  player.y + player.targetY
+        generateEffect("lightningblue", x, y) */
         } 
  }
 
@@ -71,11 +73,15 @@ document.oncontextmenu = function(mouse){
 }
  
 document.onmousemove = function(mouse){ 
-       if(isGameStarted){
+      if(isGameStarted){
         var mouseX = mouse.clientX - document.getElementById('ctx').getBoundingClientRect().left;
         var mouseY = mouse.clientY - document.getElementById('ctx').getBoundingClientRect().top;
+        
         mouseX -= CANVAS_WIDTH/2;
         mouseY -= CANVAS_HEIGHT/2; 
+       
+        player.targetX = mouseX
+        player.targetY = mouseY
         player.aimAngle = Math.atan2(mouseY,mouseX) / Math.PI * 180;
       
    }
@@ -111,14 +117,14 @@ document.onkeyup = function(event){
 }
  
 update = function(){ 
-        if(paused){
+       if(paused){
                 ctx.fillText("Paused", WIDTH/2, HEIGHT/2)
                 return;
         }
         if(player.dead){
                 ctx.fillText("", WIDTH/2, HEIGHT/2)
                 return;
-        }
+        } 
         ctx.clearRect(0,0,WIDTH,HEIGHT);
         healthBar.clearRect(0,0,WIDTH,HEIGHT)
         currentMap.draw();
@@ -211,7 +217,7 @@ Maps = function(id, imgSrc, grid){
                 ctx.drawImage(self.image, 0, 0, self.image.width, self.image.height,x,y,self.image.width*2,self.image.height*2)
         }  
 
-        self.generateTraps = function(){
+       self.generateTraps = function(){
                 for(var i = 0; i < self.grid.length; i++){
                         for(var i2 = 0; i2 < self.grid[0].length; i2++){
                                 if(self.grid[i][i2]=== 2){
@@ -271,7 +277,6 @@ Maps = function(id, imgSrc, grid){
                 if(self.grid[gridY][gridX] === 5)
                 return true
        }
-        
         mapList[id] = self;
         return self;
 }
@@ -290,6 +295,7 @@ currentMap = Maps("dungeon1", "img/dungeon1.png",
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ]);
 
+
 Maps("dungeon2", "img/map4.png",
 [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 [1,1,6,1,1,1,1,6,1,1,1,1,1,1,1,1,1,6,1,1,1,1,1,6,1,1],
@@ -305,7 +311,7 @@ Maps("dungeon2", "img/map4.png",
 ]);
 
 
-//player = Player(); 
+
 
 
 chooseBarbarian = function(){
@@ -357,6 +363,7 @@ startGame = function(){
         setInterval(update,40); 
 }
 
+    
 startNewGame = function(){
         hideDeathMenu();
         currentMap = mapList["dungeon1"];

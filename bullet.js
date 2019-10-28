@@ -35,8 +35,10 @@ Bullet = function (id, bulletType, x, y, spdX, spdY, width, height, combatType, 
                     toRemove = true; 
                     if(self.bulletType === "arrow" || self.bulletType === "SwordStrike"){
                         enemyList[key2].hp -= (self.damage - enemyList[key2].physDamageResist)
+                        enemyList[key2].isDamaged = true;
                     } else if (self.bulletType === "frostball"||self.bulletType === "fireball"){
-                        enemyList[key2].hp -=(self.damage - enemyList[key2].magicDamageResist)           
+                        enemyList[key2].hp -=(self.damage - enemyList[key2].magicDamageResist) 
+                        enemyList[key2].isDamaged = true;          
                     }    
                 }      
             }
@@ -44,6 +46,7 @@ Bullet = function (id, bulletType, x, y, spdX, spdY, width, height, combatType, 
             var isColliding = self.testCollision(player);
             if(isColliding){
                 player.hp -= (self.damage - player.magicDamageResist);
+                player.isDamaged = true;
                 toRemove = true; 
                 if(player.hp <= 0){
                     player.deathCause = "You died by running directly into a " + self.bulletType + ". Try opening your eyes while playing."

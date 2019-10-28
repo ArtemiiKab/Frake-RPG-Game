@@ -15,6 +15,10 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
         var self = Actor(type, id, x, y, width, height, img, hp, mana, AC, constitution, strength, dexterity, intellect, wisdom, bulletType); 
         self.dead = false;
         self.isAttacking = false;
+        self.isRaging = false; //for barbarian only
+        
+        self.targetX = 0;
+        self.targetY = 0;
         self.currentQuest = "none";
         self.currentEvent = "none";
         self.killCount = 0;
@@ -27,7 +31,7 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
         self.mana = Math.floor((self.intellect*100)/3)
         self.atkSpd = 1.4 //Math.floor(self.dexterity/5);
         self.atkSpdMod = 0;
-        self.bulletType2 ="frostball"; 
+        ; 
         
         if(self.id === "wizard"){
                 self.PhysicalAttackList = ["frostball","fireball"]
@@ -40,21 +44,28 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
                         let skill = self.PhysicalAttackList[i];
                         
                         let onclick = "PhysicalAttackSkill.list['" + skill + "'].event()";
-                        document.getElementById('skillSlot1List').innerHTML += "<div class='skill-column2' id ="+skill+" style = 'width:100%; height:8%;' onclick = \"" + onclick + "\">"+skill+"</div>";
+                        document.getElementById('skillSlot1List').innerHTML += "<div class='skill-column2' id ="+skill+" style = 'width:100%; height:10%; font-size:1.1vw' onclick = \"" + onclick + "\">"+skill+"</div>";
                 }
         }
         self.showPhysicalAttacks()
+        if(self.id === "wizard"){
+        self.bulletType2 ="frostball"
         self.magicAttackList = [{name:"Triple Freeze", parent:"frostball"},{name:"Ring of Fire", parent:"fireball"}];
+        } else if(self.id === "barbarian"){
+                self.bulletType2 ="Rage"
+                self.magicAttackList = [{name:"Barbarian Rage", parent:"Rage"},{name:"Ring of Fire", parent:"fireball"}];
+           
+        }
         self.showMagicAttacks = function(){
                 for(i = 0; i < self.magicAttackList.length; i++){
                         let skill = self.magicAttackList[i].parent; 
                         let name = self.magicAttackList[i].name
                         let onclick = "MagicAttackSkill.list['" + skill + "'].event()";
-                        document.getElementById('skillSlot2List').innerHTML += "<div class='skill-column2' id ="+skill+" style = 'width:100%; height:8%;' onclick = \"" + onclick + "\">"+name+"</div>";
+                        document.getElementById('skillSlot2List').innerHTML += "<div class='skill-column2' id ="+skill+" style = 'width:100%; height:10%; font-size:1.1vw' onclick = \"" + onclick + "\">"+name+"</div>";
                 }
         }
         self.showMagicAttacks();
-
+        
         var super_draw = self.draw; 
         self.draw = function(){
                 super_draw(); 
@@ -80,8 +91,6 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
             healthBar.strokeRect(0,0,100,20);
             healthBar.strokeRect(0,20,100,20);
             healthBar.restore();
-
-          
         }
         self.updatePosition = function(){ 
                 var oldX = self.x;
@@ -124,6 +133,7 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
                 if(self.y > currentMap.height - self.height/2)
                         self.y = currentMap.height - self.height/2;     
         }
+    var realUpdatePosition = self.updatePosition;
     var super_update = self.update;
     self.update = function(){
         super_update(); 
@@ -134,10 +144,31 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
                 Img.attackImg.src = `./img/`+ self.id+`Attack.png`      
                 player.img = Img.attackImg;
                 self.attackAnimeCounter+=5;
-                if(self.attackAnimeCounter > 70){
+                if(self.attackAnimeCounter > 74){
+                        
                         self.attackAnimeCounter = 0;
                         self.attackCounter = 0; 
                         self.isAttacking = false;
+                        Img.attackImg = new Image();
+                        Img.attackImg.src = `./img/`+ self.id+`.png`;
+                        self.img = Img.attackImg;
+                }
+        }
+        if(self.isRaging){
+                self.updatePosition = function(){}
+                Img.attackImg = new Image();
+                Img.attackImg.src = `./img/`+ self.id+`Scream.png`      
+                self.img = Img.attackImg;
+                self.rageAnimeCounter+=4;
+                if(self.rageAnimeCounter > 74){
+                        for(var key in enemyList ){
+                                if(enemyList[key].testCollision({x:self.x, y:self.y, width:self.width*8, height:self.height*8}))
+                                enemyList[key].isScared = true;
+                        }
+                        self.updatePosition = realUpdatePosition;
+                        self.rageAnimeCounter = 0;
+                        self.attackCounter = 0;
+                        self.isRaging = false;
                         Img.attackImg = new Image();
                         Img.attackImg.src = `./img/`+ self.id+`.png`;
                         self.img = Img.attackImg;
@@ -176,7 +207,7 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
                 showDeathMenu(); 
                 generateCorpse(self);
                 self.dead = true;
-            }
+            } 
     }  
         self.pressingDown = false;
         self.pressingUp = false;
@@ -275,6 +306,10 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
         self.spriteAnimCounter = 0;
         self.bulletSize = 50;
         self.attackAnimeCounter = 0;
+        self.rageAnimeCounter = 0;
+        self.isDamaged = false;
+        self.damageAnimeCounter = 50;
+
        
      
         var super_update = self.update;
@@ -285,6 +320,7 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                 for(var key in trapList){
                                 if(trapList[key].trapframeCount >100 && trapList[key].testCollision({x:self.x, y:(self.y+(self.height/2)), width:self.width, height:1})){
                                         self.hp -=(10 - Math.floor(self.physDamageResist/10));
+                                        self.isDamaged = true;
                                         if(player.hp <= 0){
                                                 player.deathCause = "You died stupid and totally not a heroic death in the middle of the dungeon. Be careful with traps next time"
                                         }
@@ -296,9 +332,37 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                 } else {
                         self.speed = self.speedStart
                 }
-                
-        }
-
+           
+                if(self.isDamaged ){
+                        if(self.type === "player"){
+                        Img.damageImg = new Image();
+                        Img.damageImg.src = `./img/`+ self.id+`Damaged.png`  
+                        self.img = Img.damageImg;
+                        } else {
+                        Img.damageImg = new Image()
+                        Img.damageImg.src = `./img/`+ self.name +`Damaged.png`  
+                        self.img = Img.damageImg; 
+                        self.attackCounter = 0;
+                        }    
+                        
+                        self.damageAnimeCounter+=5;
+                        if(self.damageAnimeCounter > 74){
+                                self.damageAnimeCounter = 50;
+                                self.isDamaged = false;
+                                
+                                if(self.type === "player"){
+                                Img.walkImg = new Image();
+                                Img.walkImg.src = `./img/`+ self.id+`.png`;
+                                self.img = Img.walkImg;
+                                } else {
+                                Img.walkImg = new Image();
+                                Img.walkImg.src = `./img/`+ self.name +`.png` 
+                                self.img = Img.walkImg;      
+                                }
+                               
+                        }
+                } 
+        } 
         self.draw = function(){
                 ctx.save();  
                var x = self.x - player.x; 
@@ -332,10 +396,19 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                 if(self === player && player.isAttacking){
                         var walk = Math.floor(self.attackAnimeCounter/25)
                         ctx.drawImage(self.img, walk * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height) 
+                } else if(self === player && player.isRaging){
+                        var walk = Math.floor(self.rageAnimeCounter/25)
+                        ctx.drawImage(self.img, walk * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height) 
+                } else {
+                
+                if(self.isDamaged){
+                        var walk = Math.floor(self.damageAnimeCounter/25)
+                        ctx.drawImage(self.img, walk * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height) 
                 } else {
                       
                 ctx.drawImage(self.img, walkingMod * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height)
                 }
+        }
                 ctx.restore();
         }
 
@@ -382,6 +455,7 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                                 self.img = Img.attackImg;
                                 self.speed = 0;  
                                 if(self.testCollision(player)){
+                                        player.isDamaged = true;
                                         player.hp -= ((self.strength-Math.floor(player.physDamageResist/self.strength))/**2*/)
                                         if(player.hp <= 0){
                                                 if(self.name === "Goblin_Vampire"){
@@ -451,6 +525,9 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                                      angle +=10;  
                                 }
                         }       
+                }else if(player.bulletType2 === "Rage"){
+                        player.isRaging = true;
+                        
                 }
         }
 
