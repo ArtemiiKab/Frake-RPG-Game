@@ -16,7 +16,6 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
         self.dead = false;
         self.isAttacking = false;
         self.isRaging = false; //for barbarian only
-        
         self.targetX = 0;
         self.targetY = 0;
         self.currentQuest = "none";
@@ -36,7 +35,7 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
         if(self.id === "wizard"){
                 self.PhysicalAttackList = ["frostball","fireball"]
         } else if(self.id === "barbarian"){
-                self.PhysicalAttackList = ["SwordStrike", "arrow", "Rage"];
+                self.PhysicalAttackList = ["SwordStrike", "arrow "];
                 self.bulletType2 ="fireball";
         }
         self.showPhysicalAttacks = function(){
@@ -44,25 +43,26 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
                         let skill = self.PhysicalAttackList[i];
                         
                         let onclick = "PhysicalAttackSkill.list['" + skill + "'].event()";
-                        document.getElementById('skillSlot1List').innerHTML += "<div class='skill-column2' id ="+skill+" style = 'width:100%; height:10%; font-size:1.1vw' onclick = \"" + onclick + "\">"+skill+"</div>";
+                        document.getElementById('skillSlot1List').innerHTML += "<div class='skill-column2' id ="+skill+" style = 'width:100%; height:10%; font-size:1vw' onclick = \"" + onclick + "\">"+skill+"</div>";
                 }
         }
         self.showPhysicalAttacks()
         if(self.id === "wizard"){
         self.bulletType2 ="frostball"
-        self.magicAttackList = [{name:"Triple Freeze", parent:"frostball"},{name:"Ring of Fire", parent:"fireball"}];
+        self.magicAttackList = [{name:"Triple Freeze", parent:"frostball" },{name:"Ring of Fire", parent:"fireball"}];
         } else if(self.id === "barbarian"){
                 self.bulletType2 ="Rage"
-                self.magicAttackList = [{name:"Barbarian Rage", parent:"Rage"},{name:"Ring of Fire", parent:"fireball"}];
+                self.magicAttackList = [{name:"Barbarian Scream", parent:"Rage"},{name:"Reckless Attack", parent:"Giant Sword"}];
            
         }
         self.showMagicAttacks = function(){
                 for(i = 0; i < self.magicAttackList.length; i++){
                         let skill = self.magicAttackList[i].parent; 
-                        let name = self.magicAttackList[i].name
+                        let name = self.magicAttackList[i].name;
+                     
                         let onclick = "MagicAttackSkill.list['" + skill + "'].event()";
-                        document.getElementById('skillSlot2List').innerHTML += "<div class='skill-column2' id ="+skill+" style = 'width:100%; height:10%; font-size:1.1vw' onclick = \"" + onclick + "\">"+name+"</div>";
-                }
+                        document.getElementById('skillSlot2List').innerHTML += "<div class='skill-column2' id ="+skill+" style = 'width:100%; height:10%; font-size:1vw' onclick = \"" + onclick + "\">"+name+"</div>";
+                 }
         }
         self.showMagicAttacks();
         
@@ -526,8 +526,12 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                                 }
                         }       
                 }else if(player.bulletType2 === "Rage"){
-                        player.isRaging = true;
-                        
+                        player.isRaging = true;     
+                }else if(player.bulletType2 === "Giant Sword"){
+                        if(self.attackCounter > 50 && self.mana >= 20){
+                        self.mana -= 20;
+                        generateBullet(self,self.aimAngle, self.bulletType2);
+                        }
                 }
         }
 

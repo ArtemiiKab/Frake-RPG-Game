@@ -32,10 +32,16 @@ Bullet = function (id, bulletType, x, y, spdX, spdY, width, height, combatType, 
             for(var key2 in enemyList){      
                 var isColliding = self.testCollision(enemyList[key2]);
                 if(isColliding){
+                    if(self.bulletType !== "Giant Sword"){
                     toRemove = true; 
-                    if(self.bulletType === "arrow" || self.bulletType === "SwordStrike"){
+                    }
+                    if(self.bulletType === "arrow" || self.bulletType === "SwordStrike"|| self.bulletType === "Giant Sword"){
                         enemyList[key2].hp -= (self.damage - enemyList[key2].physDamageResist)
                         enemyList[key2].isDamaged = true;
+                        if(self.bulletType === "Giant Sword"){
+                            enemyList[key2].x = self.x - self.width/4;
+                            enemyList[key2].y = self.y - self.height/4; 
+                        }
                     } else if (self.bulletType === "frostball"||self.bulletType === "fireball"){
                         enemyList[key2].hp -=(self.damage - enemyList[key2].magicDamageResist) 
                         enemyList[key2].isDamaged = true;          
@@ -70,6 +76,7 @@ generateBullet = function(actor, aimOverwrite, bulletType){
     var height = actor.bulletSize;
     var width = actor.bulletSize; 
     var bulletType = bulletType;
+    var bulletThickness = 14
     var damage = actor.magicDamage + Math.floor(Math.random()*10);
     if(bulletType === "arrow"){
         damage = actor.dexterity*5 + actor.strength + Math.floor(Math.random()*10)
@@ -91,24 +98,31 @@ generateBullet = function(actor, aimOverwrite, bulletType){
     if(actor.aimAngle < 0){
         actor.aimAngle = 360 + actor.aimAngle;
     } 
+
+    
+    if(bulletType === "Giant Sword"){
+        width = 80;
+        height = 80;
+        bulletThickness = 30
+    }
  
     if ( actor.aimAngle >= 45 && actor.aimAngle < 135){
-        width = 14;
+        width = bulletThickness;
         Img.a1 = new Image();
         Img.a1.src = `img/`+ bulletType +`Down.png`;
         img = Img.a1;
     } else if (actor.aimAngle >= 135 && actor.aimAngle < 225){
-        height = 14;
+        height = bulletThickness;
         Img.a2 = new Image();
         Img.a2.src = `img/`+ bulletType +`Left.png`;
         img = Img.a2;
     } else if (actor.aimAngle >= 225 && actor.aimAngle < 315){
-        width = 14;
+        width = bulletThickness;
         Img.a3 = new Image();
         Img.a3.src = `img/`+ bulletType +`Up.png`;
         img = Img.a3;
     } else {
-        height = 14;
+        height = bulletThickness;
         Img.a4 = new Image();
         Img.a4.src = `img/`+ bulletType +`Right.png`;
         img = Img.a4
@@ -118,15 +132,13 @@ generateBullet = function(actor, aimOverwrite, bulletType){
     if(bulletType === "bloodball"){
     width = 40;
     height = 40;
-    //spdX = Math.cos(angle/180*Math.PI)*15;
-    //spdY = Math.sin(angle/180*Math.PI)*15; 
-    //damage = 10;
     }
 
     if(bulletType === "SwordStrike"){
     width = 40;
     height = 40;
     }
+
 
     Bullet(id, bulletType, x, y, spdX, spdY, width, height, actor.type, img, damage)
 } 

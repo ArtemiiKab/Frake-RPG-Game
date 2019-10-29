@@ -14,7 +14,7 @@
 	
 	<div id = "startMenu" style = "position: absolute; top:20%; left:20%; width:60%; height:60%; background-color:#323c39; border:2px solid; border-color:azure;">
 		<div id = "chooseBarbarian" style = "position: absolute; top:10%; left:15%; width:15%; height:30%;border:2px solid; border-color:azure; ">
-			<button id="btn-choose-barbarian" style ="position:absolute; top:110%; width:100%; height:25%; text-align: center; color:black; background-color: azure; font-size: 1.2vw;" onclick = "chooseBarbarian()">Barbarian</button>
+			<button id="btn-choose-barbarian" style ="position:absolute; top:110%; width:100%; height:30%; text-align: center; color:black; background-color: azure; font-size: 1.2vw;" onclick = "chooseBarbarian()">Barbarian</button>
 		</div>
 		<div id = "barbarianInfoMenu" style = "position:absolute; top:5%; left:32.5%; width:60%; height:70%; border: 2px solid; border-color:azure; background-color:#222034; display:none; color:white; font-size: 1.4vw; text-align: center;">Class : Barbarian<br>
 			<p style = "text-align: left; padding-left:5%;" > Health total : 1000 <br>Mana : 50 <br>AC : 10 <br> Constitution : 10 <br> Strength : 10 <br> Dexterity : 8 <br> Intellect : 3 <br> Wisdom : 2 </p>
@@ -24,7 +24,7 @@
 		</div>
 
 		<div id = "chooseWizard" style = "position: absolute; top:10%; right:15%; width:15%; height:30%;border:2px solid; border-color:azure;">
-			<button id="btn-choose-wizard" style ="position:absolute; top:110%; width:100%; height:25%; text-align: center; color:black; background-color: azure; font-size: 1.2vw;" onclick = "chooseWizard()">Wizard</button>
+			<button id="btn-choose-wizard" style ="position:absolute; top:110%; width:100%; height:30%; text-align: center; color:black; background-color: azure; font-size: 1.2vw;" onclick = "chooseWizard()">Wizard</button>
 		</div>
 		<div  id = "chooseHero" style ="position: absolute; top:20%; left: 32.5%; width:35%; height:30%; text-align: center; color:azure; font-size: 2vw;">Choose your hero!</div>
 		<button id ="startGame" style ="position: absolute; top:85%;left:35%;width:10%; height:8%; background-color:azure; color:#323c39; text-align: center; font-size: 1.2vw; display:none; " onclick = "startGame()">Start Game</button>
@@ -75,8 +75,10 @@
 					<div id = "skillPoints" style = "position:absolute; top:90%; left:1%; width:25%; height:10%;"></div>
 				</div>
 				<div id = "skillsRightMenu" style = "position: absolute; width:100%; height:100%; background-color:#323c39; border: 2px solid;  border-color: azure;">
-				<div id ="skills-1Slot" style = "position: absolute; width:20%; height:100%; background-color:#323c39; border: 2px solid;  border-color: azure;"><div style = "position: absolute; width:100%; height:10%; background-color:azure; color:black; text-align: center; border: 2px solid;  border-color:#323c39"> Main Attack</div><div id = "skillSlot1List" style = "position: absolute; top:10%; width:100%; height:90%; background-color:#323c39; border: 2px solid;  border-color: azure;"></div></div>
-				<div id ="skills-2Slot" style = "position: absolute; left:20%; width:20%; height:100%; background-color:#323c39; border: 2px solid;  border-color: azure;"><div style = "position: absolute; width:100%; height:10%; background-color:azure; color:black; text-align: center; border: 2px solid;  border-color:#323c39"> Special Attack</div><div id = "skillSlot2List" style = "position: absolute; top:10%; width:100%; height:90%; background-color:#323c39; border: 2px solid;  border-color: azure;"></div></div>
+					<div id ="skills-1Slot" style = "position: absolute; width:20%; height:100%; background-color:#323c39; border: 2px solid;  border-color: azure;"><div style = "position: absolute; width:100%; height:10%; background-color:azure; color:black; text-align: center; border: 2px solid;  border-color:#323c39"> Main Attack</div><div id = "skillSlot1List" style = "position: absolute; top:10%; width:100%; height:90%; background-color:#323c39; border: 2px solid;  border-color: azure;"></div></div>
+					<div id ="skills-2Slot" style = "position: absolute; left:20%; width:20%; height:100%; background-color:#323c39; border: 2px solid;  border-color: azure;"><div style = "position: absolute; width:100%; height:10%; background-color:azure; color:black; text-align: center; border: 2px solid;  border-color:#323c39"> Special Attack</div><div id = "skillSlot2List" style = "position: absolute; top:10%; width:100%; height:90%; background-color:#323c39; border: 2px solid;  border-color: azure;"></div></div>
+					<div id ="skills-3Slot" style = "position: absolute; left:40%; width:20%; height:100%; background-color:#323c39; border: 2px solid;  border-color: azure;"><div style = "position: absolute; width:100%; height:10%; background-color:azure; color:black; text-align: center; border: 2px solid;  border-color:#323c39"> Area Effects</div><div id = "skillSlot3List" style = "position: absolute; top:10%; width:100%; height:90%; background-color:#323c39; border: 2px solid;  border-color: azure;"></div></div>
+					<div id ="skillsDescribtion" style = "position:absolute; left: 60%; width:40%; height:100%;  background-color:#323c39; border: 2px solid;  border-color: azure; color:azure; text-align:center; font-size:1.4vw; padding-top: 10%;"></div>
 				</div>
 				<div id = "quests" style = "position: absolute; width:100%; height:100%; background-color:#323c39; border: 2px solid;  border-color: azure;">
 					<div id="questList" style ="position:absolute; width:20%; height:100%; text-align:center; color:white; border: 2px solid;  border-color: azure;"></div>
@@ -88,9 +90,9 @@
 
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script src="entities.js"></script>
+<script src="magicAttackSkills.js"></script>
 <script src="enemyVampire.js"></script>
 <script src="items.js"></script>
-<script src="magicAttackSkills.js"></script>
 <script src="enemies.js"></script>
 <script src="npc.js"></script>
 <script src="upgrade.js"></script>
