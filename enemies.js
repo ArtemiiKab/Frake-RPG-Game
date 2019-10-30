@@ -3,6 +3,7 @@ Enemy = function(name, attackClass, id,x,y,width,height, img, hp, mana, AC, cons
         
     self.toRemove = false;
     self.isScared = false;
+    self.exp = self.hp + self.AC + self.constitution + self.strength + self.dexterity + self.intellect + self.wisdom
     self.scaredCounter = 0;
     self.name = name; 
     self.attackClass = attackClass;

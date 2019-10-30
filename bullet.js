@@ -42,10 +42,14 @@ Bullet = function (id, bulletType, x, y, spdX, spdY, width, height, combatType, 
                             enemyList[key2].x = self.x - self.width/4;
                             enemyList[key2].y = self.y - self.height/4; 
                         }
-                    } else if (self.bulletType === "frostball"||self.bulletType === "fireball"){
-                        enemyList[key2].hp -=(self.damage - enemyList[key2].magicDamageResist) 
-                        enemyList[key2].isDamaged = true;          
-                    }    
+                    } else if (self.bulletType === "frostball"||self.bulletType === "fireball"|| self.bulletType === "bloodball"){
+                        var damage =(self.damage - enemyList[key2].magicDamageResist);
+                        enemyList[key2].hp -= damage;
+                        enemyList[key2].isDamaged = true;      
+                        if(self.bulletType === "bloodball") {
+                            player.hp += damage/10
+                        }  
+                    }   
                 }      
             }
         }else if (self.bulletType === "frostball"||self.bulletType === "fireball"||self.bulletType === "bloodball" ) {

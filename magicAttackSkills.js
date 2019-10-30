@@ -38,7 +38,7 @@ PhysicalAttackSkill("arrow", "Regular steel arrows, doing piercing damage depend
 PhysicalAttackSkill("frostball", "Throws a single frost missile towards the enemy doing magical damage. Depends on your intellect and wisdom.");
 PhysicalAttackSkill("fireball", "Throws a single fire missile towards the enemy doing magical damage. Depends on your intellect and wisdom.");
 PhysicalAttackSkill("SwordStrike", "Releases a swipe blow of energy, the impact highly depends on your strength");
-PhysicalAttackSkill("Rage");
+PhysicalAttackSkill("bloodball","Throws a single missile of blood energy doing magical damage. On hit, you restore 10% hp of dealt damage.");
 
 
 

@@ -3,6 +3,7 @@ var choosenClass = "";
 var ctx = document.getElementById("ctx").getContext("2d");
 var canvas = document.getElementById("ctx");
 var healthBar = document.getElementById("playerHp").getContext("2d")
+
 var heightRatio = 0.05;
 healthBar.height = healthBar.width * heightRatio;
 var mapList = {};
@@ -166,6 +167,7 @@ update = function(){
                 enemyList[key].update();
                 if(enemyList[key].hp <= 0){
                 generateCorpse(enemyList[key])
+                     player.xp += enemyList[key].exp
                      delete enemyList[key];
                      player.killCount ++;
                 }

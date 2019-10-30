@@ -30,7 +30,12 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
         self.mana = Math.floor((self.intellect*100)/3)
         self.atkSpd = 1.4 //Math.floor(self.dexterity/5);
         self.atkSpdMod = 0;
-        ; 
+        
+        self.lvl = 1;
+        self.xp = 20; 
+        self.xpMax = 1000;
+        self.isSkillChanged = false; 
+
         
         if(self.id === "wizard"){
                 self.PhysicalAttackList = ["frostball","fireball"]
@@ -39,6 +44,7 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
                 self.bulletType2 ="fireball";
         }
         self.showPhysicalAttacks = function(){
+                document.getElementById('skillSlot1List').innerHTML = "";
                 for(i = 0; i < self.PhysicalAttackList.length; i++){
                         let skill = self.PhysicalAttackList[i];
                         
@@ -52,10 +58,11 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
         self.magicAttackList = [{name:"Triple Freeze", parent:"frostball" },{name:"Ring of Fire", parent:"fireball"}];
         } else if(self.id === "barbarian"){
                 self.bulletType2 ="Rage"
-                self.magicAttackList = [{name:"Barbarian Scream", parent:"Rage"},{name:"Reckless Attack", parent:"Giant Sword"}];
+                self.magicAttackList = [{name:"Scream", parent:"Rage"},{name:"Reckless Attack", parent:"Giant Sword"}];
            
         }
         self.showMagicAttacks = function(){
+                document.getElementById('skillSlot2List').innerHTML = "";
                 for(i = 0; i < self.magicAttackList.length; i++){
                         let skill = self.magicAttackList[i].parent; 
                         let name = self.magicAttackList[i].name;
@@ -64,9 +71,32 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
                         document.getElementById('skillSlot2List').innerHTML += "<div class='skill-column2' id ="+skill+" style = 'width:100%; height:10%; font-size:1vw' onclick = \"" + onclick + "\">"+name+"</div>";
                  }
         }
-        self.showMagicAttacks();
         
+        self.showMagicAttacks();
+
+        self.updateSkillMenu = function(){
+                if(self.isSkillChanged){
+                        self.showPhysicalAttacks()  
+                        self.showMagicAttacks();
+                        self.isSkillChanged = false;  
+                }
+        }
         var super_draw = self.draw; 
+
+        self.updateLvl = function(){
+                if(self.xp >= self.xpMax){
+                        self.xp = 0; 
+                        self.xpMax = self.xpMax*4;
+                        self.lvl += 1 ;
+                        self.skillPoints += 2;
+                        if(self.lvl === 2  && self.id === "wizard"){
+                                self.isSkillChanged = true;
+                                self.PhysicalAttackList.push("bloodball")
+                        }
+                }
+                
+
+        }
         self.draw = function(){
                 super_draw(); 
                 var x = self.x -  player.x + WIDTH/2;
@@ -76,6 +106,7 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
             ctx.fillStyle = "green"
             var width = 100*self.hp/self.hpMax;
             var manaWidth = 100* self.mana/self.manaMax;
+            var xp = 100* self.xp/self.xpMax
             if(width < 0){
                     width = 0;
             }
@@ -91,6 +122,29 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
             healthBar.strokeRect(0,0,100,20);
             healthBar.strokeRect(0,20,100,20);
             healthBar.restore();
+
+            ctx.save()
+            ctx.fillStyle = "gold";
+            ctx.fillRect(TILE_SIZE * 2, HEIGHT-TILE_SIZE ,  xp* 3, TILE_SIZE/4)
+            ctx.strokeRect(TILE_SIZE * 2, HEIGHT-TILE_SIZE, 100*3 , TILE_SIZE/4)
+            ctx.fillStyle = "#bf0317";
+            ctx.fillRect(TILE_SIZE * 2, HEIGHT-TILE_SIZE/2 - TILE_SIZE/4 , width * 3, TILE_SIZE/4)
+            ctx.strokeRect(TILE_SIZE * 2, HEIGHT-TILE_SIZE/2 - TILE_SIZE/4, 100*3 , TILE_SIZE/4)
+            ctx.fillStyle = "#3e63ed";
+            ctx.fillRect(TILE_SIZE * 2, HEIGHT-TILE_SIZE/2, manaWidth * 3, TILE_SIZE/4)
+            ctx.strokeRect(TILE_SIZE * 2, HEIGHT-TILE_SIZE/2, 100*3, TILE_SIZE/4)
+            ctx.fillStyle = "black";
+            ctx.fillText(self.xp + " / " + self.xpMax, TILE_SIZE * 2 + TILE_SIZE*1.3, HEIGHT-TILE_SIZE + TILE_SIZE/5 )
+            ctx.fillText(self.hp + " / " + self.hpMax, TILE_SIZE * 2 + TILE_SIZE*1.3, HEIGHT-TILE_SIZE/2 - TILE_SIZE/4 + TILE_SIZE/5 )
+            ctx.fillText(self.mana + " / " + self.manaMax, TILE_SIZE * 2 + TILE_SIZE*1.3, HEIGHT-TILE_SIZE/2 + TILE_SIZE/5 )
+           
+            ctx.fillStyle ="azure";
+            ctx.fillText("XP", TILE_SIZE * 1.4, HEIGHT-TILE_SIZE + TILE_SIZE/5 )
+            ctx.fillText("HP", TILE_SIZE * 1.4, HEIGHT-TILE_SIZE/2 - TILE_SIZE/4 + TILE_SIZE/5 )
+            ctx.fillText("MANA", TILE_SIZE * 1.4, HEIGHT-TILE_SIZE/2 + TILE_SIZE/5 )
+        
+
+            ctx.restore();
         }
         self.updatePosition = function(){ 
                 var oldX = self.x;
@@ -138,7 +192,10 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
     self.update = function(){
         super_update(); 
         updateSkillBoxes();
-        
+        self.updateSkillMenu();
+        self.updateLvl();
+       
+
         if(self.isAttacking){
                 Img.attackImg = new Image();
                 Img.attackImg.src = `./img/`+ self.id+`Attack.png`      
@@ -177,8 +234,8 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
         
         self.hpMax = self.constitution*100;
         self.manaMax = Math.floor((self.intellect*100)/3)
-        self.hpRegen = Math.floor(self.constitution/5);
-        self.manaRegen = Math.floor(self.wisdom/5);
+        self.hpRegen = Math.ceil(self.constitution/5);
+        self.manaRegen = Math.ceil(self.wisdom/5);
         self.atkSpd = 1.4 + self.atkSpdMod//Math.floor(self.dexterity/5) + self.atkSpdMod;
         self.speed = Math.floor(self.dexterity - Math.floor((self.constitution/10)))-1;
 
@@ -456,7 +513,7 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                                 self.speed = 0;  
                                 if(self.testCollision(player)){
                                         player.isDamaged = true;
-                                        player.hp -= ((self.strength-Math.floor(player.physDamageResist/self.strength))/**2*/)
+                                        player.hp -= Math.ceil(self.strength- Math.floor(player.physDamageResist/self.strength))
                                         if(player.hp <= 0){
                                                 if(self.name === "Goblin_Vampire"){
                                                         player.deathCause = "You died by trying to hug a Vampire. They are sexy, but try running from them next time!"
@@ -530,6 +587,7 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
                 }else if(player.bulletType2 === "Giant Sword"){
                         if(self.attackCounter > 50 && self.mana >= 20){
                         self.mana -= 20;
+                        player.isAttacking = true;
                         generateBullet(self,self.aimAngle, self.bulletType2);
                         }
                 }

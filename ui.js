@@ -108,6 +108,7 @@ updateHeroStatBoxes = function(){
     document.getElementById("intellectDiv").innerHTML =  player.intellect;
     document.getElementById("wisdomDiv").innerHTML =  player.wisdom;
     document.getElementById("skillPoints").innerHTML = "SKILL POINTS: " + player.skillPoints;
+    document.getElementById("playerLvl").innerHTML = "LVL " + player.lvl
    
     ctx.fillText(player.hp + " Hp",0,30);
     ctx.fillText('Score: ' + score,200,30);
