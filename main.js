@@ -57,10 +57,13 @@ Img.map.src = "img/dungeon1.png";
 Img.body = new Image(); 
 Img.body.src = "img/body.png";
 
+var imgPotionMerchantTalk = new Image();
+imgPotionMerchantTalk.src = "img/PotionMerchantTalk.png";
+
 
  
 document.onclick = function(){
-        if(isGameStarted){
+        if(isGameStarted && !isNotAttack){
         player.performAttack(); 
      /*  var x =  player.x + player.targetX
        var y =  player.y + player.targetY
@@ -100,6 +103,10 @@ document.onkeydown = function(event){
                 player.pressingUp = true;
         else if(event.keyCode === 81 && playerInventory.hasItem("potion",1) )//q
                 Item.list["potion"].event();
+        else if (event.keyCode === 84){// t 
+                player.isTalking = true;
+                
+        }
 }
  
 document.onkeyup = function(event){
@@ -115,6 +122,7 @@ document.onkeyup = function(event){
                 player.pressingUp = false; 
         else if(event.keyCode === 80) //p ;
                 paused = !paused;  
+        
 }
  
 update = function(){ 
@@ -156,6 +164,10 @@ update = function(){
         for(var key in torchList){
                 torchList[key].update();     
         }
+
+        for(var key in merchantList){
+                merchantList[key].update(); 
+        }
         for(var key in npcList){
                 npcList[key].update();
                 if(npcList[key].hp <= 0){
@@ -166,8 +178,9 @@ update = function(){
         for(var key in enemyList){
                 enemyList[key].update();
                 if(enemyList[key].hp <= 0){
-                generateCorpse(enemyList[key])
-                     player.xp += enemyList[key].exp
+                     generateCorpse(enemyList[key])
+                     player.xp += enemyList[key].exp;
+                     generateCoin(enemyList[key].x, enemyList[key].y, Math.floor(Math.random()*10))
                      delete enemyList[key];
                      player.killCount ++;
                 }
@@ -179,11 +192,13 @@ update = function(){
         randomlyGenerateUpgrade(); 
         }
         player.update(); 
+       
         updateUI();//only after player update!
 
         for(var key in effectList){
                 effectList[key].update();     
-        }       
+        } 
+          
 }
  
 Maps = function(id, imgSrc, grid){
@@ -259,6 +274,19 @@ Maps = function(id, imgSrc, grid){
         }
 } 
 
+        self.generateMerchants = function(){
+        for(var i = 0; i < self.grid.length; i++){
+                for(var i2 = 0; i2 < self.grid[0].length; i2++){
+                        if(self.grid[i][i2] === 8){
+                                generatePotionMerchant(i2,i)
+                        } 
+                        if (self.grid[i][i2] === 9){
+                                generateBlacksmithMerchant(i2,i)
+                        }
+                }
+        }
+} 
+
        self.isStairs = function(pt){
         var gridX = Math.floor(pt.x/ TILE_SIZE);
         var gridY = Math.floor(pt.y/ TILE_SIZE);
@@ -269,7 +297,7 @@ Maps = function(id, imgSrc, grid){
        self.isTorch = function(pt){
         var gridX = Math.floor(pt.x/ TILE_SIZE);
         var gridY = Math.floor(pt.y/ TILE_SIZE);
-                if(self.grid[gridY][gridX] === 6)
+                if(self.grid[gridY][gridX] === 6 || self.grid[gridY][gridX] === 8 )
                 return true
        }
 
@@ -286,8 +314,8 @@ Maps = function(id, imgSrc, grid){
 currentMap = Maps("dungeon1", "img/dungeon1.png",
 [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 [1,1,6,1,1,1,1,6,1,1,1,1,1,1,1,1,6,5,6,1],
-[1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,1,1,1,1,0,2,0,0,2,0,1],
+[1,0,0,0,0,0,0,8,1,1,1,1,1,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,1,1,1,1,1,1,0,2,0,0,2,0,1],
 [1,1,0,1,1,1,0,0,0,6,1,1,6,0,0,0,0,0,0,1],
 [1,1,0,1,1,1,0,0,0,0,3,3,0,0,0,0,4,0,0,1],
 [1,1,0,1,1,1,0,0,0,1,1,1,1,0,0,0,0,0,0,1],
@@ -310,6 +338,24 @@ Maps("dungeon2", "img/map4.png",
 [1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,1],
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ]);
+
+Maps("mainCamp", "img/newMap.png", 
+[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,0,0,8,1,1,1,1,1,1,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,6,1,9,1,6,0,0,0,0,0,0,1],
+[1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1],
+[1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+[1,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+[1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+[1,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+])
 
 
 chooseBarbarian = function(){
@@ -371,16 +417,15 @@ startNewGame = function(){
         player.mana = player.manaMax;
         player.x= (TILE_SIZE*2 - TILE_SIZE/2)
         player.y = (TILE_SIZE*3 - TILE_SIZE/2)
-        player.atkSpd = 1;
         player.currentQuest = "none";
         player.currentEvent = "none";
         player.killCount = 0;
         timeWhenGameStarted = Date.now();
         frameCount = 0;
         score = 0;
-        enemyList = {};
-        npcList = {};
+        enemyList = {}; 
         upgradeList = {};
+        merchantList = {};
         bulletList = {}; 
         corpseList = {};
         trapList = {};
@@ -388,14 +433,18 @@ startNewGame = function(){
         doorList = {}; 
         questList = {};
         torchList = {};
+        npcList = {};
         effectList = {};
-        generateNpc(TILE_SIZE*8 - TILE_SIZE/2, TILE_SIZE*3 - TILE_SIZE/2, "npc1", quest1);
+        playerInventory.addItem("potion", 3);
+         playerInventory.addItem("potionSpeed",3);
+        generateNpc(TILE_SIZE*8 - TILE_SIZE/2, TILE_SIZE*3 - TILE_SIZE/2, "npc1", quest1, "questGiver");
+      
         currentMap.generateTraps();
         currentMap.generateCoffins();
         currentMap.generateDoors();
         currentMap.generateTorches();
-        playerInventory.addItem("potion",1);
-        playerInventory.addItem("potionSpeed",1);
+        currentMap.generateMerchants();
+        merchantList["potionMerchant"].inventory.refreshRender();
         textMenu.innerHTML = '';
         pageNumber = 0;
         quest1.isStarted = false;

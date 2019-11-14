@@ -48,6 +48,7 @@ Bullet = function (id, bulletType, x, y, spdX, spdY, width, height, combatType, 
                         enemyList[key2].isDamaged = true;      
                         if(self.bulletType === "bloodball") {
                             player.hp += damage/10
+                           
                         }  
                     }   
                 }      

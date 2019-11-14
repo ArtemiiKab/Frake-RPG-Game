@@ -1,4 +1,22 @@
 var menu = document.getElementById('menu').innerHTML;
+var isOnMenu = document.getElementById('menu');
+var isOnDialog = document.getElementById('btn-flip-page');
+var isNotAttack = false;
+isOnMenu.addEventListener("mouseover", function(){
+    isNotAttack = true;
+}) 
+isOnMenu.addEventListener("mouseleave", function(){
+    isNotAttack = false;  
+})
+
+isOnDialog.addEventListener("mouseover", function(){
+    isNotAttack = true;
+}) 
+isOnDialog.addEventListener("mouseleave", function(){
+    isNotAttack = false;  
+})
+
+
 
 
 
@@ -6,6 +24,8 @@ updateUI = function(){
     updateTextMenu();
     updateShowQuests();
     updateHeroStatBoxes();
+    document.querySelector(".playerGold").innerHTML = "Your Gold: " + player.gold;
+
     if(player.health <= 0){
         showDeathMenu();
     }
@@ -14,10 +34,12 @@ updateUI = function(){
 
 
 openMenu = function(){ 
+   
     document.getElementById('menu').style.display = "block"; 
 } 
 
 closeMenu = function(){
+   
     document.getElementById('menu').style.display = "none"; 
 } 
 
@@ -108,7 +130,9 @@ updateHeroStatBoxes = function(){
     document.getElementById("intellectDiv").innerHTML =  player.intellect;
     document.getElementById("wisdomDiv").innerHTML =  player.wisdom;
     document.getElementById("skillPoints").innerHTML = "SKILL POINTS: " + player.skillPoints;
-    document.getElementById("playerLvl").innerHTML = "LVL " + player.lvl
+    document.getElementById("playerLvl").innerHTML = "LVL " + player.lvl; 
+  
+
    
     ctx.fillText(player.hp + " Hp",0,30);
     ctx.fillText('Score: ' + score,200,30);

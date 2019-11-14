@@ -31,16 +31,29 @@
 		<button id ="backToChooseHero" style ="position: absolute; top:85%;left:48%;width:10%; height:8%; background-color:azure; color:#323c39; text-align: center; font-size: 1.2vw; display:none; " onclick = "backToChooseHero()">Back</button>
 	</div>
 	
-	<div id = "ui" style = "position:absolute; width:100%; height:100%; display:none;">
+	<div id = "ui" style = "position:absolute; width:100%; height:100%; display:none;"> 
+		<div id = "onDeathMenu" style = "position: absolute; top:20%; left:20%; width:60%; height: 60%; display:none;"></div>
+		
+		<div id = "shopPotions" style = "position: absolute; top:20%; left:20%; width:60%; height:60%;background-color: #323c39; border: 2px solid;  border-color: azure; display:none">
+			<div class ="playerGold" style = "position: absolute; top:-12%; width:20%; height: 10%; background-color:#323c39;; text-align:center; color: azure;border: 2px solid;  border-color: azure;" ></div>
+			<div style = "position: absolute; width:40%; height:100%;">
+				<div style = "position: absolute; width:100%; height: 10%; background-color:azure; text-align:center; color: #323c39;border: 2px solid;  border-color: #323c39;">Your Potions</div>
+				<div id = "playerPotions" style = "position: absolute; top: 10%; width:100%; height:90%"></div>
+			</div>
+				<div style = "position: absolute;left:40%; width:60%; height: 10%; background-color:azure; text-align:center; color: #323c39;border: 2px solid;  border-color: #323c39;">Merchant's shop</div>
+			<div style = "position: absolute;width:60%; height:90%; top: 10%;left:40%">
+				<div id = "merchantPotions" style = "position:  absolute; ; width:100%; height:100%;border: 2px solid;  border-color: azure;" ><div id ="try"></div></div>
+			</div>
+		</div>
 		<div id ="playerLvl" style = "position: absolute; left:1%; top:86%; width:6%; height:10%; background-color:azure; border: 2px solid; border-radius: 50%; border-color:azure; color:#323c39; text-align: center; padding-top:1%;"></div>
 			<div id = "UpCenter" style ="position: absolute; left:35%; top:2%; width:30%; height:10%;">
 			<div id = "UpCenterTextMenu" style="position: absolute; width:100%; height:100%"></div>
 			<button id ="btn-flip-page" style ="position:absolute; top:102%; left:40%; width:20%; height:50%; text-align: center; display:none; " onclick = "flipPage()">Next</button>
 		</div>
 		
-		<div id = "UpRightCorner" style = "position:absolute; left:60%; top:0; width:40%; height:40%;">
+		<div id = "UpRightCorner" style = "position:absolute; left:60%; top:0; width:40%; height:10%;">
 			
-			<button id="btn-open-menu" style="position:absolute; left:70%; top:5%; width:15%; height:20%" onclick ="openMenu()">Menu</button>
+			<button id="btn-open-menu" style="position:absolute; left:70%; top:5%; width:15%; height:80%" onclick ="openMenu()">Menu</button>
 		</div> 
 		<div id = "BottomCenter" style = "position: absolute; left:38%; top:86%; width:30%; height:10%; ">
 			<div id = "firstSkill" style = "position: absolute; width:16%;height:100%; "></div>
@@ -53,7 +66,7 @@
 
 			<div id = "fifthSkill" style = "position: absolute; left:72%; width:16%;height:100%; "></div>
 		</div>
-		<div id = "onDeathMenu" style = "position: absolute; top:20%; left:20%; width:60%; height: 60%; display:none;"></div>
+		
 		<div id = "menu" style = "position:absolute; top:20%; left:20%; width:60%; height:60%;">
 			<button id = "btn-close-menu" style = "position: absolute; left:96%; top:-8%; width:8%; height:15%; z-index:100;" onclick = "closeMenu()">Close</button>
 			<div id = "inv-left" style = "position:absolute; width:30%; height:100%; background-color: #323c39; border: 2px solid;  border-color: azure;">
@@ -92,6 +105,7 @@
 <script src="entities.js"></script>
 <script src="magicAttackSkills.js"></script>
 <script src="enemyVampire.js"></script>
+<script src="merchant.js"></script>
 <script src="items.js"></script>
 <script src="enemies.js"></script>
 <script src="npc.js"></script>

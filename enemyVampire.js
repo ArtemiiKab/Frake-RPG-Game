@@ -20,7 +20,7 @@ Vampire = function(name, attackClass, id,x,y,width,height, img, hp, mana, AC, co
         if(self.mana < self.manaMax){
             self.mana +=5;
         }
-        if(self.vampBlastCounter >50 && self.mana >= 20){ 
+        if(self.vampBlastCounter >50 && self.mana >= 20 && !self.isPolymorfed){ 
             Img.attackImg = new Image();
             Img.attackImg.src = `./img/`+self.name+`Attack.png`      
             self.img = Img.attackImg;
@@ -31,7 +31,7 @@ Vampire = function(name, attackClass, id,x,y,width,height, img, hp, mana, AC, co
                     self.performSpecialAttack()         
                 }
            
-            if(self.vampBlastCounter >100){
+            if(self.vampBlastCounter >100 && !self.isPolymorfed){
                 self.vampBlastCounter = 0;
                 Img.walking = new Image();
                 Img.walking.src = `./img/`+self.name+`.png`      
@@ -42,14 +42,14 @@ Vampire = function(name, attackClass, id,x,y,width,height, img, hp, mana, AC, co
 
         if(self.hp < self.hpMax){
             self.vampHealCounter ++
-            if(self.vampHealCounter > 75){
+            if(self.vampHealCounter > 75 && !self.isPolymorfed){
                 Img.attackImg = new Image();
                 Img.attackImg.src = `./img/`+self.name+`Attack.png`      
                 self.img = Img.attackImg;
                 self.speed = 0;
                 self.hp += 5;
             }
-                if(self.vampHealCounter > 100){
+                if(self.vampHealCounter > 100 && !self.isPolymorfed){
                 self.vampHealCounter = 0;
                 Img.walking = new Image();
                 Img.walking.src = `./img/`+self.name+`.png`      

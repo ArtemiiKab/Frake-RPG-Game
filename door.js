@@ -21,7 +21,11 @@ Door = function(type, id,x,y,width,height,img){
 
         if(self.isOpened){
             if(currentMap.isEntrance({x:player.x, y:(player.y+(player.height/2)), width:player.width, height:1})){
+                if(currentMap.id = "dungeon1"){
+                    currentMap = mapList["mainCamp"]
+                } else {
                 currentMap = mapList["dungeon2"];
+                }
                 player.x= (TILE_SIZE*2 - TILE_SIZE/2)
                  player.y = (TILE_SIZE*3 - TILE_SIZE/2)
                  timeWhenGameStarted = Date.now();
@@ -29,6 +33,7 @@ Door = function(type, id,x,y,width,height,img){
                  score = 0;
                  enemyList = {};
                  upgradeList = {};
+                 merchantList = {};
                  bulletList = {}; 
                  corpseList = {};
                  trapList = {};
@@ -41,6 +46,14 @@ Door = function(type, id,x,y,width,height,img){
                  currentMap.generateCoffins(); 
                  currentMap.generateTorches();
                  currentMap.generateDoors();
+                 currentMap.generateMerchants();
+                
+                 if( currentMap === mapList["mainCamp"]){
+                    generateNpc(TILE_SIZE*12 - TILE_SIZE/2, TILE_SIZE*7 - TILE_SIZE/2, "barbarian", "", "walker");
+                    generateNpc(TILE_SIZE*11 - TILE_SIZE/2, TILE_SIZE*7 - TILE_SIZE/2, "wizard", "", "walker");
+                    generateNpc(TILE_SIZE*10 - TILE_SIZE/2, TILE_SIZE*7 - TILE_SIZE/2, "barbarian", "", "walker");
+                    generateNpc(TILE_SIZE*13 - TILE_SIZE/2, TILE_SIZE*7 - TILE_SIZE/2, "barbarian", "", "walker");
+                 }
             }
         }
 

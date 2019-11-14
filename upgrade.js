@@ -33,6 +33,8 @@ Upgrade = function (id,x,y,width,height,category,img){
                             playerInventory.addItem("potion",1)
                     if(self.category === 'manaRestore')
                             player.mana = player.manaMax;
+                    if(self.category === 'coin')
+                        player.gold += self.id;
                             
                     delete upgradeList[self.id];
             }
@@ -66,4 +68,14 @@ randomlyGenerateUpgrade = function(){
     }
    
     Upgrade(id,x,y,width,height,category,img);
+} 
+
+generateCoin = function (x, y, amount){
+        var height = 50;
+        var width = 32;
+        var category = "coin";
+        Img.coin = new Image();
+        Img.coin.src = "img/coin.png"
+        var img = Img.coin;
+        Upgrade(amount,x,y,width,height,category,img);
 }

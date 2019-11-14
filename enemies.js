@@ -92,6 +92,16 @@ Enemy = function(name, attackClass, id,x,y,width,height, img, hp, mana, AC, cons
                         self.scaredCounter = 0;
                 }
         }
+        if(self.isPolymorfed){
+                self.width = 40;
+                self.height = 40
+                Img.polymorfed = new Image();
+                Img.polymorfed.src = `./img/chicken.png`      
+                self.img = Img.polymorfed;
+                self.speed = 0.5;
+                self.attackCounter = 0;
+
+        }
         self.spriteAnimCounter += 0.2;
         self.updateAim();
         self.performAttack(); 

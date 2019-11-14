@@ -39,6 +39,7 @@ PhysicalAttackSkill("frostball", "Throws a single frost missile towards the enem
 PhysicalAttackSkill("fireball", "Throws a single fire missile towards the enemy doing magical damage. Depends on your intellect and wisdom.");
 PhysicalAttackSkill("SwordStrike", "Releases a swipe blow of energy, the impact highly depends on your strength");
 PhysicalAttackSkill("bloodball","Throws a single missile of blood energy doing magical damage. On hit, you restore 10% hp of dealt damage.");
+PhysicalAttackSkill("polymorf","Turns enemy into chiken if you land a click within 4 tiles from you. Costs 100 mana to cast.");
 
 
 
