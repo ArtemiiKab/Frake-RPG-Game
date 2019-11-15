@@ -132,7 +132,7 @@ Npc = function(name, quest, type, id, x,y,width,height, img, hp, mana, AC, const
             self.quest.isStarted = true; 
             player.currentQuest = self.quest; 
             player.currentEvent = self.quest.event1;
-           
+            player.currentQuest.isStarted = true;
         }
     } 
 
@@ -145,7 +145,7 @@ Npc = function(name, quest, type, id, x,y,width,height, img, hp, mana, AC, const
         self.spriteAnimCounter += 0.2;
         self.addToCounter();
         self.updateAim();
-        if(self.type === "questGiver"){
+        if(self.type === "questGiver" && !self.quest.isStarted ){
             self.giveQuest();
         }
         

@@ -51,8 +51,8 @@ Door = function(type, id,x,y,width,height,img){
                  if( currentMap === mapList["mainCamp"]){
                     generateNpc(TILE_SIZE*12 - TILE_SIZE/2, TILE_SIZE*7 - TILE_SIZE/2, "barbarian", "", "walker");
                     generateNpc(TILE_SIZE*11 - TILE_SIZE/2, TILE_SIZE*7 - TILE_SIZE/2, "wizard", "", "walker");
-                    generateNpc(TILE_SIZE*10 - TILE_SIZE/2, TILE_SIZE*7 - TILE_SIZE/2, "barbarian", "", "walker");
-                    generateNpc(TILE_SIZE*13 - TILE_SIZE/2, TILE_SIZE*7 - TILE_SIZE/2, "barbarian", "", "walker");
+                    generateNpc(TILE_SIZE*10 - TILE_SIZE/2, TILE_SIZE*7 - TILE_SIZE/2, "skeletonRogue", "", "walker");
+                    generateNpc(TILE_SIZE*13 - TILE_SIZE/2, TILE_SIZE*7 - TILE_SIZE/2, "skeletonRogue", "", "walker");
                  }
             }
         }

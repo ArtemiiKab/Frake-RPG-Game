@@ -129,14 +129,17 @@ randomlyGenerateEnemy = function(){
         var height = 90     //between 10 and 40
         var width = 90
         var id = Math.random();
-        
-        if(Math.random()<= 0.3){
+        var chooseEnemy = Math.random()*4
+        if(chooseEnemy <= 1){
                 Enemy("Goblin_Wizard","areaEffect",id,x,y,width,height, Img.goblin, 100, 100, 4, 1, 2, 5, 8, 2, "lightningblue");
-        }else if(Math.random()> 0.3 && Math.random()< 0.6) {
+        }else if(chooseEnemy > 1 && chooseEnemy<= 2) {
                 Enemy("Goblin_Warrior","melee", id,x,y,width,height, Img.goblin_warrior, 300, 0, 6, 3, 10, 8, 1, 0, "knife");
-        } else {
+        } else if (chooseEnemy > 2 && chooseEnemy<= 3){
                 Enemy("Goblin_LightningWizard","spell",id,x,y,width,height, Img.goblinLightningWizard, 100, 100, 4, 1, 2, 5, 8, 2, "frostball");    
-        } 
+        } else {
+                Enemy("skeletonRogue","melee", id,x,y,width,height, Img.skeletonRogue, 200, 0, 10, 3, 10, 4, 0, 0, "knife");
+     
+        }
 } 
 
 targetGenerateEnemy = function(x, y){

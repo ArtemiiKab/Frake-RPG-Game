@@ -44,6 +44,9 @@ Img.barbarian = new Image();
 Img.barbarian.src = "img/Barbarian.png";
 Img.wizard = new Image();
 Img.wizard.src = "img/wizard.png";
+
+Img.skeletonRogue = new Image();
+Img.skeletonRogue.src = "img/skeletonRogue.png";
 Img.goblin = new Image();
 Img.goblin.src = "img/Goblin_Wizard.png";
 Img.goblinLightningWizard = new Image();
@@ -444,7 +447,10 @@ startNewGame = function(){
         currentMap.generateDoors();
         currentMap.generateTorches();
         currentMap.generateMerchants();
-        merchantList["potionMerchant"].inventory.refreshRender();
+        for(var key in merchantList){
+                merchantList[key].inventory.refreshRender();
+        }
+        
         textMenu.innerHTML = '';
         pageNumber = 0;
         quest1.isStarted = false;

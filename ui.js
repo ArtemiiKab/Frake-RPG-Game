@@ -41,8 +41,12 @@ openMenu = function(){
 closeMenu = function(){
    
     document.getElementById('menu').style.display = "none"; 
-} 
+}  
 
+closeShop = function(){
+    document.getElementById("shopPotions").style.display = "none";
+    player.isTalking = false
+}
 showPotions = function(){
     document.getElementById('potions').style.display = "block";
     document.getElementById('playerInfo').style.display = "none";
