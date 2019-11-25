@@ -356,7 +356,8 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
   self.attackAnimeCounter = 0;
   self.rageAnimeCounter = 0;
   self.isDamaged = false;
-  self.damageAnimeCounter = 50; 
+  self.damageAnimeCounter = 50;  
+  self.isCasting = false;
 
   self.isPolymorfed = false;
    
@@ -562,7 +563,30 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
         	self.img = Img.walking;
         	self.speed = self.startSpeed;
       	} 
-    	}           
+    	} else if (self.attackClass === "targetSpell") {
+          if(self.bulletType === "raiseDead" && self.attackCounter > 50 && !self.isCasting ){
+            
+            for(var key in corpseList){
+              if(corpseList[key].testCollision({x:self.x - TILE_SIZE*2, y:self.y - TILE_SIZE*2, width:TILE_SIZE*4, height:TILE_SIZE*4})){
+                corpseList[key].isRessurecting = true;
+                break
+              }
+                self.isCasting = true;
+                Img.attackImg = new Image();
+                Img.attackImg.src = `./img/`+self.name+`Attack.png`      
+                self.img = Img.attackImg;
+                self.speed = 0; 
+            } 
+          }
+          if(self.attackCounter > 75){
+            self.attackCounter = 0; 
+            self.isCasting = false;
+            Img.walking = new Image();
+            Img.walking.src = `./img/`+self.name+`.png`      
+            self.img = Img.walking;
+            self.speed = self.startSpeed;
+          }
+      }        
   	}
   }
        

@@ -105,8 +105,7 @@ Enemy = function(name, attackClass, id,x,y,width,height, img, hp, mana, AC, cons
         self.spriteAnimCounter += 0.2;
         self.updateAim();
         self.performAttack(); 
-        if(self.toRemove = true){ 
-        }
+      
     }
     if(currentMap.isPositionWall(self)|| currentMap.isTorch(self)){
             randomlyGenerateEnemy()
@@ -129,16 +128,18 @@ randomlyGenerateEnemy = function(){
         var height = 90     //between 10 and 40
         var width = 90
         var id = Math.random();
-        var chooseEnemy = Math.random()*4
+        var chooseEnemy = Math.random()*5
         if(chooseEnemy <= 1){
                 Enemy("Goblin_Wizard","areaEffect",id,x,y,width,height, Img.goblin, 100, 100, 4, 1, 2, 5, 8, 2, "lightningblue");
         }else if(chooseEnemy > 1 && chooseEnemy<= 2) {
                 Enemy("Goblin_Warrior","melee", id,x,y,width,height, Img.goblin_warrior, 300, 0, 6, 3, 10, 8, 1, 0, "knife");
         } else if (chooseEnemy > 2 && chooseEnemy<= 3){
                 Enemy("Goblin_LightningWizard","spell",id,x,y,width,height, Img.goblinLightningWizard, 100, 100, 4, 1, 2, 5, 8, 2, "frostball");    
-        } else {
+        } else if (chooseEnemy > 3 && chooseEnemy<= 4){
                 Enemy("skeletonRogue","melee", id,x,y,width,height, Img.skeletonRogue, 200, 0, 10, 3, 10, 4, 0, 0, "knife");
      
+        } else {
+                Enemy("skeletonNecromancer","targetSpell",id,x,y,width,height, Img.skeletonNecromancer, 800, 800, 7, 1, 2, 5, 8, 8, "raiseDead");    
         }
 } 
 
@@ -150,6 +151,6 @@ targetGenerateEnemy = function(x, y){
         if(Math.random()< 0.5){
                 Vampire("Goblin_Vampire","melee",id,x,y,width,height, Img.goblin_vampire, 1000, 200, 12, 10, 10, 14, 10, 5, "frostball");
         }else {
-                Vampire("Goblin_Vampire","melee", id,x,y,width,height, Img.goblin_vampire, 1000, 200, 12, 10, 10, 14, 10, 5, "frostball");
+                Enemy("skeletonRogue","melee", id,x,y,width,height, Img.skeletonRogue, 200, 0, 10, 3, 10, 4, 0, 0, "knife");
         }  
 }

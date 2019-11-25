@@ -22,7 +22,7 @@ blacksmithMerchantInventory = function(){
         for(var i = 0; i < self.items.length; i++){
             var item = Item.list[self.items[i].id];
             var buy = "Item.list['" + item.id + "'].buy()";
-            str += "<div class = 'potionListMerchant' id = '"+item.name+"'><div class = 'potion-merchant-info-block'><img src = './img/"+item.id+".png' class = 'img-merchant-potions'><div class = 'info-merchant-potions' style = 'color:azure;'>Amount : "+ self.items[i].amount +"x</div><button class = 'btn-buy-potion' onclick = \""+buy+"\" >Buy</button></div></div>";
+            str += "<div class = 'potionListMerchant1' id = '"+item.name+"'><div class = 'potion-merchant-info-block'><img src = './img/"+item.id+".png' class = 'img-merchant-potions'><div class = 'info-merchant-potions' style = 'color:azure;'>Amount : "+ self.items[i].amount +"x</div><button class = 'btn-buy-potion' onclick = \""+buy+"\" >Buy</button></div></div>";
         }
         document.getElementById("merchantPotions").innerHTML = str;
     }
@@ -75,9 +75,8 @@ Merchant = function(type, id, x, y, width, height, img){
        
         if(self.testCollision(player)){
           
-          //  self.img = imgPotionMerchantTalk
+            //  self.img = imgPotionMerchantTalk
             if(player.isTalking ){
-                self.inventory.refreshRender();
                 document.getElementById("shopPotions").style.display = "block";  
             }
         } 
@@ -105,8 +104,8 @@ generatePotionMerchant = function(colX, rowY){
 generateBlacksmithMerchant = function(colX, rowY){
     var x = colX*TILE_SIZE+TILE_SIZE
     var y = rowY*TILE_SIZE+TILE_SIZE
-    var height = TILE_SIZE*1.6    //between 10 and 40
-    var width = TILE_SIZE*1.6
+    var height = TILE_SIZE*1.3    //between 10 and 40
+    var width = TILE_SIZE*1.3
     var id = "blacksmithMerchant"
     var img = new Image();
     var type = "BlacksmithMerchant"

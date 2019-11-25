@@ -101,6 +101,7 @@ Item ("potion", "Potion", function(){
         playerInventory.refreshRender();
         
     }
+    
 })
 
 Item ("potionSpeed", "PotionSpeed", function(){

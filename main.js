@@ -47,6 +47,8 @@ Img.wizard.src = "img/wizard.png";
 
 Img.skeletonRogue = new Image();
 Img.skeletonRogue.src = "img/skeletonRogue.png";
+Img.skeletonNecromancer = new Image();
+Img.skeletonNecromancer.src = "img/skeletonNecromancer.png";
 Img.goblin = new Image();
 Img.goblin.src = "img/Goblin_Wizard.png";
 Img.goblinLightningWizard = new Image();
@@ -59,6 +61,8 @@ Img.map = new Image();
 Img.map.src = "img/dungeon1.png";
 Img.body = new Image(); 
 Img.body.src = "img/body.png";
+Img.bodyRessurect = new Image();
+Img.bodyRessurect.src = "img/riseDead.png"
 
 var imgPotionMerchantTalk = new Image();
 imgPotionMerchantTalk.src = "img/PotionMerchantTalk.png";
@@ -145,6 +149,9 @@ update = function(){
        
         for(var key in corpseList){
                 corpseList[key].update(); 
+                if(corpseList[key].isExpired){
+                        delete corpseList[key]
+                }
         }
         for (var key in trapList){
                 trapList[key].update();           
