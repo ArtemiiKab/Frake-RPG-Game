@@ -119,7 +119,17 @@ Npc = function(name, quest, type, id, x,y,width,height, img, hp, mana, AC, const
                 } else if (self.directionMod === 3 && !currentMap.isPositionWall(self.bumperRight)){
                     self.x += self.speed
                 }
-            } 
+            }  
+        for(var key in doorList){
+            if(doorList[key].type === "secretDoor" && !doorList[key].isOpened){
+                if(doorList[key].testCollision({x:self.x, y:self.y , width:self.width, height:self.height})){
+                    self.y += self.speed;
+                } else if(doorList[key].testCollision({x:self.x, y:self.y + self.height/4 , width:self.width, height:self.height})){
+                    self.y -= self.speed;
+                }
+
+            }
+        }
 
 
     } 

@@ -55,7 +55,7 @@ Trap = function(type, id,x,y,width,height,img){
                             var frameWidth = self.img.width/6; 
                             var walk = Math.floor(self.trapframeCount/25)
             
-                            ctx.drawImage(self.img, walk * frameWidth, 0, frameWidth, frameWidth, x-(TILE_SIZE/2), y-(TILE_SIZE/2)+2, self.width+2, self.height+2)
+                            ctx.drawImage(self.img, walk * frameWidth, 0, frameWidth, frameWidth, x-(TILE_SIZE/2), y-(TILE_SIZE/2), self.width+2, self.height+2)
                     ctx.restore();
                 }
             }

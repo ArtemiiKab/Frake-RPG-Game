@@ -30,7 +30,7 @@ Upgrade = function (id,x,y,width,height,category,img){
         var isColliding = player.testCollision(self);
             if(isColliding){
                     if(self.category === 'heal')
-                            playerInventory.addItem("potion",1)
+                            playerInventory.addItem("potion","potions",1)
                     if(self.category === 'manaRestore')
                             player.mana = player.manaMax;
                     if(self.category === 'coin')

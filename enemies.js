@@ -70,11 +70,27 @@ Enemy = function(name, attackClass, id,x,y,width,height, img, hp, mana, AC, cons
                 }else if(diffY < -(self.speed/2+0.1) && !currentMap.isPositionWall(self.bumperDown)){
                     self.y += self.speed*2;
                 }        
+            } 
+
+            for(var key in doorList){
+                if(doorList[key].type === "secretDoor" && !doorList[key].isOpened){
+                    if(doorList[key].testCollision({x:self.x, y:self.y-self.height/4 , width:self.width, height:self.height})){
+                        self.y += self.speed ;
+                    } else if(doorList[key].testCollision({x:self.x, y:self.y + self.height/4 , width:self.width, height:self.height})){
+                        self.y -= self.speed ;
+                    } else if (doorList[key].testCollision({x:self.x + self.width/4, y:self.y , width:self.width, height:self.height})){
+                        self.x -= self.speed
+                    } else if(doorList[key].testCollision({x:self.x - self.width/4, y:self.y , width:self.width, height:self.height})){
+                        self.x += self.speed    
+                    }
+    
+                }
             }
+    
             
             
-            var isColliding = self.testCollision(player);
-                if(isColliding && self.attackClass === "melee"){ 
+           
+                if(self.testCollision(player) && self.attackClass === "melee"){ 
                         self.attackCounter = 0;
                         self.attacking = true;
                 };  

@@ -52,6 +52,7 @@ showPotions = function(){
     document.getElementById('playerInfo').style.display = "none";
     document.getElementById('skillsRightMenu').style.display = "none";
     document.getElementById('quests').style.display = "none";
+    document.getElementById('playerInventoryMain').style.display = "none";
 } 
 
 showHero = function(){
@@ -59,6 +60,7 @@ showHero = function(){
     document.getElementById('playerInfo').style.display = "block";
     document.getElementById('skillsRightMenu').style.display = "none";
     document.getElementById('quests').style.display = "none";
+    document.getElementById('playerInventoryMain').style.display = "none";
 } 
 
 showSkills = function(){
@@ -66,6 +68,7 @@ showSkills = function(){
     document.getElementById('playerInfo').style.display = "none";
     document.getElementById('skillsRightMenu').style.display = "block";
     document.getElementById('quests').style.display = "none";
+    document.getElementById('playerInventoryMain').style.display = "none";
 }
 
 addConstitution = function(){
@@ -98,6 +101,15 @@ showQuests = function(){
     document.getElementById('playerInfo').style.display = "none";
     document.getElementById('skillsRightMenu').style.display = "none";
     document.getElementById('quests').style.display = "block";
+    document.getElementById('playerInventoryMain').style.display = "none";
+} 
+
+showInventory = function(){
+    document.getElementById('potions').style.display = "none";
+    document.getElementById('playerInfo').style.display = "none";
+    document.getElementById('skillsRightMenu').style.display = "none";
+    document.getElementById('quests').style.display = "none";
+    document.getElementById('playerInventoryMain').style.display = "block";
 }
 
 updateShowQuests = function(){
@@ -118,7 +130,7 @@ updateSkillBoxes = function(){
     document.getElementById('fourthSkill').style.backgroundSize = "cover";
     document.getElementById('fourthSkill').style.backgroundRepeat = "no-repeat"; 
   
-    var healPotion = playerInventory.items.filter(it => it.id === "potion");
+    var healPotion = playerInventory.potions.filter(it => it.id === "potion");
     document.getElementById('fourthSkill').innerHTML = "X : "+ healPotion.map(it => it.amount).join()+ "";
     if(healPotion.length === 0){
         document.getElementById('fourthSkill').innerHTML = "X : 0"
@@ -134,7 +146,21 @@ updateHeroStatBoxes = function(){
     document.getElementById("intellectDiv").innerHTML =  player.intellect;
     document.getElementById("wisdomDiv").innerHTML =  player.wisdom;
     document.getElementById("skillPoints").innerHTML = "SKILL POINTS: " + player.skillPoints;
-    document.getElementById("playerLvl").innerHTML = "LVL " + player.lvl; 
+    document.getElementById("playerLvl").innerHTML = "LVL " + player.lvl;  
+
+    if(player.skillPoints <= 0){
+        document.getElementById('btn-constitution').disabled = true;
+    document.getElementById('btn-strength').disabled = true;
+      document.getElementById('btn-dexterity').disabled = true;
+    document.getElementById('btn-intellect').disabled = true;
+    document.getElementById('btn-wisdom').disabled = true;
+  } else {
+    document.getElementById('btn-constitution').disabled = false;
+    document.getElementById('btn-strength').disabled = false;
+    document.getElementById('btn-dexterity').disabled = false;
+    document.getElementById('btn-intellect').disabled = false;
+    document.getElementById('btn-wisdom').disabled = false;    
+  }
   
 
    

@@ -12,6 +12,12 @@ var WIDTH = 1705;
 var CANVAS_WIDTH = 1705;
 var CANVAS_HEIGHT = 768;
 var TILE_SIZE = 96;
+
+var playerLook = document.getElementById("playerLook").getContext("2d")
+
+
+
+
 var timeWhenGameStarted = Date.now();   //return time in ms
 var frameCount = 0;
 var paused = false;
@@ -41,9 +47,25 @@ window.addEventListener('resize', function(){
 
 var Img = {};
 Img.barbarian = new Image();
-Img.barbarian.src = "img/Barbarian.png";
+Img.barbarian.src = "img/barbarian.png";
 Img.wizard = new Image();
 Img.wizard.src = "img/wizard.png";
+
+
+Img.wizardAttack = new Image();
+Img.wizardAttack.src = "img/wizardAttack.png";
+
+
+
+
+
+
+
+
+
+
+Img.banditRogue = new Image();
+Img.banditRogue.src = "img/banditRogue.png"
 
 Img.skeletonRogue = new Image();
 Img.skeletonRogue.src = "img/skeletonRogue.png";
@@ -108,11 +130,27 @@ document.onkeydown = function(event){
                 player.pressingLeft = true;
         else if(event.keyCode === 87) // w
                 player.pressingUp = true;
-        else if(event.keyCode === 81 && playerInventory.hasItem("potion",1) )//q
+        else if(event.keyCode === 81 && playerInventory.hasItem("potion","potions",1) )//q
                 Item.list["potion"].event();
         else if (event.keyCode === 84){// t 
-                player.isTalking = true;
+                player.isTalking = true;       
+        }
+        else if (event.keyCode === 49){//1
                 
+                if(player.PhysicalAttackList.indexOf(player.bulletType)+1 < player.PhysicalAttackList.length){
+                        player.bulletType = player.PhysicalAttackList[player.PhysicalAttackList.indexOf(player.bulletType)+1]
+                } else {
+                        player.bulletType = player.PhysicalAttackList[0]
+                }     
+        }
+        else if (event.keyCode === 50){//2
+                player.isClothingOn = true
+                var magicSkillsList = player.magicAttackList.map(it => it.parent) 
+                if(magicSkillsList.indexOf(player.bulletType2)+1 < magicSkillsList.length){
+                        player.bulletType2 = magicSkillsList[magicSkillsList.indexOf(player.bulletType2)+1]
+                } else {
+                        player.bulletType2 = magicSkillsList[0]
+                }     
         }
 }
  
@@ -143,6 +181,7 @@ update = function(){
         } 
         ctx.clearRect(0,0,WIDTH,HEIGHT);
         healthBar.clearRect(0,0,WIDTH,HEIGHT)
+        playerLook.clearRect(0,0,WIDTH,HEIGHT);
         currentMap.draw();
         frameCount++;
         score++; 
@@ -165,9 +204,7 @@ update = function(){
         for(var key in upgradeList){
                 upgradeList[key].update(); 
         }
-        for(var key in bulletList){
-                bulletList[key].update();   
-        }
+       
         for(var key in questList){
                 questList[key].update();     
         }
@@ -177,6 +214,14 @@ update = function(){
 
         for(var key in merchantList){
                 merchantList[key].update(); 
+        }
+
+        for(var key in triggerList){
+                triggerList[key].update(); 
+        }
+
+        for(var key in ritualStoneList){
+                ritualStoneList[key].update();     
         }
         for(var key in npcList){
                 npcList[key].update();
@@ -204,6 +249,10 @@ update = function(){
         player.update(); 
        
         updateUI();//only after player update!
+        
+        for(var key in bulletList){
+                bulletList[key].update();   
+        }
 
         for(var key in effectList){
                 effectList[key].update();     
@@ -229,7 +278,7 @@ Maps = function(id, imgSrc, grid){
                 if (gridY <0 || gridY >= self.grid.length){
                         return true;
                 }
-                if (self.grid[gridY][gridX] === 1 || self.grid[gridY][gridX] === 6){
+                if (self.grid[gridY][gridX] === 1 || self.grid[gridY][gridX] === 6 || self.grid[gridY][gridX] === 51 || self.grid[gridY][gridX] === 53 ){
                         return true;
                 }else if (self.grid[gridY][gridX] === 0){
                         return false;
@@ -264,11 +313,19 @@ Maps = function(id, imgSrc, grid){
         }
 } 
 
+
+
         self.generateDoors = function(){
         for(var i = 0; i < self.grid.length; i++){
                 for(var i2 = 0; i2 < self.grid[0].length; i2++){
                         if(self.grid[i][i2]=== 5){
                                 generateDoor(i2,i)
+                        } else if(self.grid[i][i2] === 51){
+                                generateTrigger(i2,i)
+                        } else if (self.grid[i][i2] === 52){
+                                generateSecretDoor(i2,i)
+                        }  else if (self.grid[i][i2] === 53){
+                                generateRitualStone(i2,i)
                         }
                 }
         }
@@ -365,6 +422,29 @@ Maps("mainCamp", "img/newMap.png",
 [1,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,1],
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+]); 
+
+Maps("location1", "img/map1.png",
+[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1],
+[1,1,1,1,1,1,1,1,6,52,6,1,1,1,1,1,1,1,1,1],
+[1,1,1,1,1,0,0,53,0,0,0,53,0,0,0,1,1,1,1,1],
+[1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],
+[1,1,1,1,1,0,0,0,0,51,0,0,0,0,0,1,1,1,1,1],
+[1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],
+[1,1,1,1,1,0,0,53,0,0,0,53,0,0,0,1,1,1,1,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ])
 
 
@@ -391,7 +471,7 @@ chooseWizard = function(){
 backToChooseHero = function(){
         document.getElementById('chooseBarbarian').style.display = "block";  
         document.getElementById('chooseWizard').style.display = "block";
-        document.getElementById('btn-choose-barbarian').style.display = "block";
+        document.getElementById('btn-choose-barbarian').style.display = "none";
         document.getElementById('btn-choose-wizard').style.display = "block";
         document.getElementById('chooseHero').style.display = "block";
 
@@ -420,13 +500,15 @@ startGame = function(){
     
 startNewGame = function(){
         hideDeathMenu();
-        currentMap = mapList["dungeon1"];
+        currentMap = mapList["location1"];
         player.dead = false;
         player.deathCause = "Wow, you're still alive, that's impressive... Are you sure you want to leave?"
         player.hp = player.hpMax;
         player.mana = player.manaMax;
-        player.x= (TILE_SIZE*2 - TILE_SIZE/2)
-        player.y = (TILE_SIZE*3 - TILE_SIZE/2)
+        player.x= (TILE_SIZE*8 - TILE_SIZE/2)
+         player.y = (TILE_SIZE*17 - TILE_SIZE/2)
+        //player.x= (TILE_SIZE*2 - TILE_SIZE/2)
+       // player.y = (TILE_SIZE*3 - TILE_SIZE/2)
         player.currentQuest = "none";
         player.currentEvent = "none";
         player.killCount = 0;
@@ -443,11 +525,17 @@ startNewGame = function(){
         doorList = {}; 
         questList = {};
         torchList = {};
+        triggerList = {};
+        ritualStoneList = [];
         npcList = {};
         effectList = {};
-        playerInventory.addItem("potion", 3);
-         playerInventory.addItem("potionSpeed",3);
-        generateNpc(TILE_SIZE*8 - TILE_SIZE/2, TILE_SIZE*3 - TILE_SIZE/2, "npc1", quest1, "questGiver");
+        playerInventory.addItem("potion","potions", 3);
+         playerInventory.addItem("potionSpeed","potions",3);
+         playerInventory.addItem("Skull","helmets", 1);
+         playerInventory.addItem("FrostHood","helmets", 1);
+         playerInventory.addItem("HatOfGreatWizardry","helmets", 1);
+         playerInventory.addItem("RubyDiadem","helmets", 1);
+       // generateNpc(TILE_SIZE*8 - TILE_SIZE/2, TILE_SIZE*3 - TILE_SIZE/2, "npc1", quest1, "questGiver");
       
         currentMap.generateTraps();
         currentMap.generateCoffins();
@@ -460,6 +548,7 @@ startNewGame = function(){
         
         textMenu.innerHTML = '';
         pageNumber = 0;
-        quest1.isStarted = false;
+        quest1.isStarted = false;  
+        targetGenerateEnemy(300, 300);
 }
 

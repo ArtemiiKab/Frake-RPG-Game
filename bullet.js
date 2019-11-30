@@ -1,13 +1,16 @@
-Bullet = function (id, bulletType, x, y, spdX, spdY, width, height, combatType, img, damage){
+Bullet = function (id, bulletType, actor, x, y, spdX, spdY, width, height, combatType, img, damage, damageType){
     var self = Entity('bullet', id, x, y, width, height, img);
-    
+    self.actor = actor
     self.timer = 0;
+    self.explosionframeCount = 0;
     var super_update = self.update;
     self.combatType = combatType;
     self.spdX = spdX; 
     self.spdY = spdY;  
     self.bulletType = bulletType;
-    self.damage = damage;
+    self.damage = damage; 
+    self.damageType = damageType;
+    self.toRemove = false;
 
     self.updatePosition = function(){
         self.x += self.spdX;
@@ -22,18 +25,43 @@ Bullet = function (id, bulletType, x, y, spdX, spdY, width, height, combatType, 
     } 
     self.update = function(){
         super_update();
-        
-        var toRemove = false;
+
         self.timer++;
         if(self.timer > 75){
-            toRemove = true;
+            self.toRemove = true;
         }
-        if(self.combatType === "player"){
+
+        if(self.toRemove && self.damageType ==="magic"){
+            self.explosionframeCount += 15
+            var explosion = new Image();
+            explosion.src = "./img/"+ self.bulletType + "Explosion.png";
+            self.width = TILE_SIZE/2;
+            self.height = TILE_SIZE/2
+            self.img = explosion;
+            self.spdX = 0;
+            self.spdY = 0;
+            self.draw = function(){
+                ctx.save(); 
+                      var  x = self.x - player.x; 
+                      var  y = self.y - player.y; 
+        
+                        x += WIDTH/2;
+                        y += HEIGHT/2; 
+                        var frameWidth = self.img.width/6; 
+                        var frameHeight = self.img.height
+                        var walk = Math.floor(self.explosionframeCount/25)
+        
+                        ctx.drawImage(self.img, walk * frameWidth, 0, frameWidth, frameHeight, x - TILE_SIZE/4 , y - TILE_SIZE/5 , self.width+2, self.height+2)
+                ctx.restore();
+            }
+        } else if (self.toRemove){
+            delete bulletList[self.id];
+        }
+        if(self.combatType === "player" && !self.toRemove){
             for(var key2 in enemyList){      
-                var isColliding = self.testCollision(enemyList[key2]);
-                if(isColliding){
+                if(self.testCollision(enemyList[key2])){
                     if(self.bulletType !== "Giant Sword"){
-                    toRemove = true; 
+                    self.toRemove = true; 
                     }
                     if(self.bulletType === "arrow" || self.bulletType === "SwordStrike"|| self.bulletType === "Giant Sword"){
                         enemyList[key2].hp -= (self.damage - enemyList[key2].physDamageResist)
@@ -42,32 +70,52 @@ Bullet = function (id, bulletType, x, y, spdX, spdY, width, height, combatType, 
                             enemyList[key2].x = self.x - self.width/4;
                             enemyList[key2].y = self.y - self.height/4; 
                         }
-                    } else if (self.bulletType === "frostball"||self.bulletType === "fireball"|| self.bulletType === "bloodball"){
+                    } else if (self.damageType === "magic"){
                         var damage =(self.damage - enemyList[key2].magicDamageResist);
                         enemyList[key2].hp -= damage;
                         enemyList[key2].isDamaged = true;      
                         if(self.bulletType === "bloodball") {
-                            player.hp += damage/10
+                            self.actor.hp += damage/10
                            
                         }  
                     }   
                 }      
             }
-        }else if (self.bulletType === "frostball"||self.bulletType === "fireball"||self.bulletType === "bloodball" ) {
-            var isColliding = self.testCollision(player);
-            if(isColliding){
+        }else if(self.testCollision(player)  && !self.toRemove){
+            if(self.damageType === "magic"){
                 player.hp -= (self.damage - player.magicDamageResist);
+            } else {
+                player.hp -= (self.damage - player.physDamageResist)
+            }
                 player.isDamaged = true;
-                toRemove = true; 
-                if(player.hp <= 0){
-                    player.deathCause = "You died by running directly into a " + self.bulletType + ". Try opening your eyes while playing."
-                } 
-            }  
+                self.toRemove = true; 
+            if(player.hp <= 0){
+                player.deathCause = "You died by running directly into a " + self.bulletType + ". Try opening your eyes while playing."
+            } 
+        }else if (self.actor.type === "ritualStone" && !self.toRemove){
+           
+            for (var key3 in enemyList){
+                if(self.testCollision(enemyList[key3])){
+                  
+                    if(self.damageType === "magic"){
+                        enemyList[key3].hp -= (self.damage - enemyList[key3].magicDamageResist);
+                    } else {
+                        enemyList[key3].hp -= (self.damage - enemyList[key3].physDamageResist)
+                    }
+                    enemyList[key3].isDamaged = true;
+                    self.toRemove = true; 
+                }
+            }
+               
         }
-        if(currentMap.isPositionWall(self)||currentMap.isTorch(self)){
-            toRemove = true;
+        
+        if(!self.testCollision (self.actor)){
+            if(currentMap.isPositionWall(self)||currentMap.isTorch(self)){
+                self.toRemove = true;
+            }
         }
-        if(toRemove){
+        if(self.explosionframeCount > 125){
+           
             delete bulletList[self.id];   
         }
     }
@@ -75,18 +123,26 @@ Bullet = function (id, bulletType, x, y, spdX, spdY, width, height, combatType, 
 }
 
 generateBullet = function(actor, aimOverwrite, bulletType){
-    
+    var damageType = "";
     var x = actor.x;
-    var y = actor.y;
+    var y = actor.y; 
+   
     var height = actor.bulletSize;
     var width = actor.bulletSize; 
+    if(height === undefined && width === undefined){
+        height = 40; 
+        width = 40;
+    }
     var bulletType = bulletType;
+
     var bulletThickness = 14
     var damage = actor.magicDamage + Math.floor(Math.random()*10);
     if(bulletType === "arrow"){
         damage = actor.dexterity*5 + actor.strength + Math.floor(Math.random()*10)
+        damageType = "piercing"
     }else if(bulletType === "SwordStrike"){
-        damage = actor.strength*10 + actor.dexterity + Math.floor(Math.random()*10)
+        damage = actor.strength*10 + actor.dexterity + Math.floor(Math.random()*10);
+        damageType = "slashing"
     }
     var id = Math.random();
     var angle;
@@ -110,41 +166,53 @@ generateBullet = function(actor, aimOverwrite, bulletType){
         height = 80;
         bulletThickness = 30
     }
- 
-    if ( actor.aimAngle >= 45 && actor.aimAngle < 135){
-        width = bulletThickness;
-        Img.a1 = new Image();
-        Img.a1.src = `img/`+ bulletType +`Down.png`;
-        img = Img.a1;
-    } else if (actor.aimAngle >= 135 && actor.aimAngle < 225){
-        height = bulletThickness;
-        Img.a2 = new Image();
-        Img.a2.src = `img/`+ bulletType +`Left.png`;
-        img = Img.a2;
-    } else if (actor.aimAngle >= 225 && actor.aimAngle < 315){
-        width = bulletThickness;
-        Img.a3 = new Image();
-        Img.a3.src = `img/`+ bulletType +`Up.png`;
-        img = Img.a3;
+    var chooseDirection = function(aim){
+        if ( aim >= 45 &&  aim < 135){
+            width = bulletThickness;
+            Img.a1 = new Image();
+            Img.a1.src = `img/`+ bulletType +`Down.png`;
+            img = Img.a1;
+        } else if ( aim >= 135 &&  aim < 225){
+            height = bulletThickness;
+            Img.a2 = new Image();
+            Img.a2.src = `img/`+ bulletType +`Left.png`;
+            img = Img.a2;
+        } else if ( aim >= 225 &&  aim < 315){
+            width = bulletThickness;
+            Img.a3 = new Image();
+            Img.a3.src = `img/`+ bulletType +`Up.png`;
+            img = Img.a3;
+        } else {
+            height = bulletThickness;
+            Img.a4 = new Image();
+            Img.a4.src = `img/`+ bulletType +`Right.png`;
+            img = Img.a4
+        } 
+    }
+   
+    if(actor.type !== "ritualStone"){
+        chooseDirection(actor.aimAngle)
     } else {
-        height = bulletThickness;
-        Img.a4 = new Image();
-        Img.a4.src = `img/`+ bulletType +`Right.png`;
-        img = Img.a4
-    } 
-    
+        chooseDirection(aimOverwrite)
+    }
 
     if(bulletType === "bloodball"){
     width = 40;
     height = 40;
+    damageType = "magic"
     }
 
     if(bulletType === "SwordStrike"){
     width = 40;
     height = 40;
+
+    }
+
+    if(bulletType === "fireball" || bulletType === "frostball"|| bulletType === "bloodball" ){
+        damageType = "magic"
     }
 
 
-    Bullet(id, bulletType, x, y, spdX, spdY, width, height, actor.type, img, damage)
+    Bullet(id, bulletType, actor, x, y, spdX, spdY, width, height, actor.type, img, damage, damageType)
 } 
 
