@@ -46,12 +46,14 @@ background-color: #222034;
     border-color: rgb(175, 204, 204); 
     background-color: azure;
     color:#222034;
+    cursor:pointer;
 }
 
 #btn-open-menu {
     font-family: MiniSet2;  
     background-color:azure;
-    border-radius: 80%;  
+    border-radius: 80%; 
+    cursor:pointer; 
 }
 
 #menu{
@@ -70,6 +72,7 @@ background-color: #222034;
 #btn-start-game{
     background-color:white;
     color:black;
+    cursor:pointer;
 }
 
 
@@ -77,6 +80,7 @@ background-color: #222034;
     border-radius: 50%;
     background-color:white;
     color:black;
+    cursor:pointer;
 
 } 
 
@@ -84,6 +88,7 @@ background-color: #222034;
     border-radius: 50%;
     background-color:white;
     color:black;
+    cursor:pointer;
 
 } 
 
@@ -122,7 +127,7 @@ background-color: #222034;
     height:20%;
 }
 .potionList{
-    width:100%;
+    width:50%;
     height:20%;
 } 
 .potionListMerchant{
@@ -146,6 +151,7 @@ background-color: #222034;
     left:5%;
     width:8%;
     height:50%;
+    cursor:pointer;
 
 } 
 
@@ -155,7 +161,9 @@ background-color: #222034;
     left:5%;
     width:16%;
     height:50%;
-
+    cursor:pointer;
+    z-index:50;
+    background-size:100%;
 } 
 
 .img-merchant-potions{
@@ -196,6 +204,7 @@ background-color: #222034;
     left: 75%;
     width: 10%;
     height: 50%;
+    cursor:pointer;
 } 
 
 .btn-use-item{
@@ -204,7 +213,8 @@ background-color: #222034;
     top:20%;
     left: 75%;
     width: 15%;
-    height: 50%;
+    height: 50%; 
+    cursor:pointer;
 } 
 
 .btn-sell-potion{
@@ -214,6 +224,7 @@ background-color: #222034;
     left: 80%;
     width: 10%;
     height: 50%;
+    cursor:pointer;
   
 } 
 
@@ -279,3 +290,71 @@ background-color:white;
 color:#323c39
 } 
 
+
+
+.item-describtion{
+    position: absolute;
+    top:5%;
+    left:5%;
+    width:16%;
+    height:50%;
+    z-index:30;
+    opacity:0;
+    cursor:pointer;   
+   
+}
+
+.item-describtion:hover{
+    background-color: black;
+   
+    opacity:0.6; 
+    width: 80%;
+    height: 150%;
+    position: absolute;
+    top:-5%;
+    left:-5%;
+    
+    z-index:30;
+    text-align:center;
+   
+    
+}
+
+.item-describtion:after{
+    
+    white-space: pre-wrap;
+    overflow:hidden;
+    opacity:0;
+    z-index:30;
+} 
+
+.item-describtion:hover:after{
+    opacity:0.6; 
+    z-index:30;
+
+} 
+
+.invisible{
+    display:none
+}
+
+.hold{
+    border:solid azure 2px;
+} 
+
+.hovered{
+    border-style :dashed;
+} 
+
+.headBox{
+    position: absolute; 
+    top:47%;
+    left:72%;
+    width:15%;
+    height:20%;
+    background-color:transparent; 
+    border:2px azure solid; 
+    background-repeat: no-repeat;
+    background-size: 100%;
+    justify-content: center;
+}

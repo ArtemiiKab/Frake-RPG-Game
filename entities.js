@@ -3,7 +3,7 @@ var enemyList = {};
 var npcList = {};
 var merchantList = {};
 var upgradeList = {};
-var bulletList = {}; 
+var bulvarList = {}; 
 var corpseList = {}; 
 var trapList = {};
 var coffinList = {}; 
@@ -14,8 +14,8 @@ var torchList = {};
 var howManyHealPotions = 0;
  
  
-Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution, strength, dexterity, intellect, wisdom, bulletType){
-  var self = Actor(type, id, x, y, width, height, img, hp, mana, AC, constitution, strength, dexterity, intellect, wisdom, bulletType); 
+Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution, strength, dexterity, intellect, wisdom, bulvarType){
+  var self = Actor(type, id, x, y, width, height, img, hp, mana, AC, constitution, strength, dexterity, intellect, wisdom, bulvarType); 
   self.dead = false;
   self.isAttacking = false;
   self.isRaging = false; //for barbarian only
@@ -45,7 +45,9 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
   self.gold = 100; 
 
   self.isHatOn = false;
-  self.hat = ""
+
+  self.hat = "None"
+  self.armor = "None"
   self.isClothingOn = false
 
         
@@ -53,30 +55,30 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
     self.PhysicalAttackList = ["frostball","fireball", "polymorf"]
   } else if(self.id === "barbarian"){
     self.PhysicalAttackList = ["SwordStrike", "arrow"];
-    self.bulletType2 ="fireball";
+    self.bulvarType2 ="fireball";
   }
   self.showPhysicalAttacks = function(){
     document.getElementById('skillSlot1List').innerHTML = "";
     for(i = 0; i < self.PhysicalAttackList.length; i++){
-      let skill = self.PhysicalAttackList[i];            
-      let onclick = "PhysicalAttackSkill.list['" + skill + "'].event()";
+      var skill = self.PhysicalAttackList[i];            
+      var onclick = "PhysicalAttackSkill.list['" + skill + "'].event()";
       document.getElementById('skillSlot1List').innerHTML += "<div class='skill-column2' id ="+skill+" style = 'width:100%; height:10%; font-size:1vw' onclick = \"" + onclick + "\">"+skill+"</div>";
     }
   }
   self.showPhysicalAttacks()
     if(self.id === "wizard"){
-      self.bulletType2 ="frostball"
+      self.bulvarType2 ="frostball"
       self.magicAttackList = [{name:"Triple Freeze", parent:"frostball" },{name:"Ring of Fire", parent:"fireball"}];
     } else if(self.id === "barbarian"){
-      self.bulletType2 ="Rage"
+      self.bulvarType2 ="Rage"
       self.magicAttackList = [{name:"Scream", parent:"Rage"},{name:"Reckless Attack", parent:"Giant Sword"}];     
     }
   self.showMagicAttacks = function(){
     document.getElementById('skillSlot2List').innerHTML = "";
     for(i = 0; i < self.magicAttackList.length; i++){
-      let skill = self.magicAttackList[i].parent; 
-      let name = self.magicAttackList[i].name;
-      let onclick = "MagicAttackSkill.list['" + skill + "'].event()";
+      var skill = self.magicAttackList[i].parent; 
+      var name = self.magicAttackList[i].name;
+      var onclick = "MagicAttackSkill.list['" + skill + "'].event()";
       document.getElementById('skillSlot2List').innerHTML += "<div class='skill-column2' id ="+skill+" style = 'width:100%; height:10%; font-size:1vw' onclick = \"" + onclick + "\">"+name+"</div>";
     }
   }
@@ -120,14 +122,75 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
       if(player.mana < player.manaMax)
         player.mana += player.manaRegen;
     }    
-    if(self.hp > self.hpMax)
+    if(self.hp > self.hpMax){
       self.hp = self.hpMax
-    if(self.mana > self.manaMax)
+    } else if (self.hp < 0){
+      self.hp = 0
+    }
+    if(self.mana > self.manaMax){
       self.mana = self.manaMax
+    }else if (self.mana < 0){
+      self.mana = 0
+    }
   }
-  var super_draw = self.draw; 
+ // var super_draw = self.draw; 
   self.draw = function(){
-  	super_draw(); 
+    //super_draw(); 
+    if(!self.isAttacking){
+   
+    self.hatImg = Img[self.id+"Hat"+self.hat] 
+    self.cloakImg = Img[self.id+self.armor]
+
+    } else {
+      self.hatImg = Img[self.id+"Hat"+self.hat +"Attack"]
+      self.cloakImg = Img[self.id+self.armor +"Attack"]
+    }
+   
+    ctx.save();  
+    var x = self.x - player.x; 
+    var y = self.y - player.y; 
+
+    x += WIDTH/2;
+    y += HEIGHT/2; 
+
+    x -= self.width/2;
+    y -= self.height/2;
+
+    var frameWidth = self.img.width/3; 
+    self.frameHeight = self.img.height/4;
+
+    var aimAngle = self.aimAngle;
+    if(aimAngle < 0){
+      aimAngle = 360 + aimAngle;
+    }
+
+    self.directionMod = 3; //draw right
+    if(aimAngle >= 45 && aimAngle < 135){// down
+    	self.directionMod = 2;                   
+    } else if (aimAngle >= 135 && aimAngle < 225){//left
+      self.directionMod = 1;
+    } else if (aimAngle >= 225 && aimAngle < 315){//up
+      self.directionMod = 0;
+    }
+    if(!self.isAttacking){
+    var walkingMod = Math.floor(self.spriteAnimCounter) % 3; 
+    } else {
+    var walkingMod = Math.floor(self.attackAnimeCounter/25) ; 
+    }
+
+    ctx.fillStyle ="#323c39" //"#363543"
+    ctx.fillRect(WIDTH*30/100 , HEIGHT*82/100,TILE_SIZE + WIDTH*1/100, TILE_SIZE*1.2 + HEIGHT*1/100)
+    ctx.strokeStyle = "azure";
+    ctx.strokeRect(WIDTH*30/100 , HEIGHT*82/100,TILE_SIZE + WIDTH*1/100, TILE_SIZE*1.2 + HEIGHT*1/100)
+    ctx.drawImage(self.hatImg, walkingMod * frameWidth, 2 * self.frameHeight, frameWidth, self.frameHeight/2, WIDTH*30.5/100 , HEIGHT*82/100, TILE_SIZE, TILE_SIZE*1.2)
+    playerLook.drawImage(self.cloakImg, walkingMod * frameWidth, 2 * self.frameHeight, frameWidth, self.frameHeight, TILE_SIZE/1.1, TILE_SIZE/10 , player.img.width/0.9 , player.img.height/1.7)
+    playerLook.drawImage(self.hatImg, walkingMod * frameWidth, 2 * self.frameHeight, frameWidth, self.frameHeight, TILE_SIZE/1.1, TILE_SIZE/10 , player.img.width/0.9 , player.img.height/1.7)
+
+    ctx.drawImage(self.cloakImg, walkingMod * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height)
+    ctx.drawImage(self.hatImg, walkingMod * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height)
+        
+   //drawing character UP there.......................................................................................................................................................................
+
     var x = self.x -  player.x + WIDTH/2;
     var y = self.y -  player.y + HEIGHT/2 - self.height/2 - 20;
     ctx.save();
@@ -253,15 +316,15 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
 
     if(self.isAttacking ){
       self.attackAnimeCounter += 5; 
-      if(self.id === "wizard")
-      self.img = Img.wizardAttack;
+     // if(self.id === "wizard")
+     // self.img = Img.wizardAttack;
       if(self.attackAnimeCounter > 74){ 
         self.attackAnimeCounter = 0;
         self.attackCounter = 0; 
         self.isAttacking = false;
-        Img.walk = new Image();
-        Img.walk.src = `./img/`+ self.id+`.png`;
-        self.img = Img.walk;
+     //   Img.walk = new Image();
+     //   Img.walk.src = `./img/`+ self.id+`.png`;
+     //   self.img = Img.walk;
       }
     }
     if(self.isRaging){
@@ -363,7 +426,7 @@ Entity = function(type,id,x,y,width,height,img){
 	return self;
 }
  
-Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, strength, dexterity, intellect, wisdom, bulletType){
+Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, strength, dexterity, intellect, wisdom, bulvarType){
   var self = Entity(type,id,x,y,width,height,img);
         
   self.hp = hp;
@@ -384,10 +447,10 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
   self.startSpeed = self.speed;
   self.attackCounter = 0;
   self.aimAngle = 0; 
-  self.bulletType = bulletType;
+  self.bulvarType = bulvarType;
   self.speedStart = self.speed;
   self.spriteAnimCounter = 0;
-  self.bulletSize = 50;
+  self.bulvarSize = 50;
   self.attackAnimeCounter = 0;
   self.rageAnimeCounter = 0;
   self.isDamaged = false;
@@ -484,50 +547,8 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
     }
     var walkingMod = Math.floor(self.spriteAnimCounter) % 3; 
 
-
-    if(self === player){
-      ctx.fillStyle ="#323c39" //"#363543"
-      ctx.fillRect(WIDTH*30/100 , HEIGHT*82/100,TILE_SIZE + WIDTH*1/100, TILE_SIZE*1.2 + HEIGHT*1/100)
-      ctx.strokeStyle = "azure";
-      ctx.strokeRect(WIDTH*30/100 , HEIGHT*82/100,TILE_SIZE + WIDTH*1/100, TILE_SIZE*1.2 + HEIGHT*1/100)
-      ctx.drawImage(self.img, walkingMod * frameWidth, 2 * self.frameHeight, frameWidth, self.frameHeight/2, WIDTH*30.5/100 , HEIGHT*82/100, TILE_SIZE, TILE_SIZE*1.2)
-      playerLook.drawImage(self.img, walkingMod * frameWidth, 2 * self.frameHeight, frameWidth, self.frameHeight, TILE_SIZE/1.1, TILE_SIZE/10 , player.img.width/0.9 , player.img.height/1.7)
-    } 
-                
-    if(self === player && player.isAttacking){
-      var walk = Math.floor(self.attackAnimeCounter/25) 
-      Img.attackImg = new Image();
-      Img.attackImg.src = `./img/`+ player.id+`Attack.png` ;  
-      player.img = Img.attackImg;
-      ctx.drawImage(player.img, walk * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height) 
-      
-
-      if(self.isHatOn){
-          var hatImg = new Image()
-          hatImg.src = "./img/"+player.id +"AttackHat"+ player.hat+".png";
-          ctx.drawImage(hatImg, walk * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height) 
-          ctx.drawImage(hatImg, walkingMod * frameWidth, 2 * self.frameHeight, frameWidth, self.frameHeight/2, WIDTH*30.5/100 , HEIGHT*82/100, TILE_SIZE, TILE_SIZE*1.2)  
-          playerLook.drawImage(hatImg, walkingMod * frameWidth, 2 * self.frameHeight, frameWidth, self.frameHeight, TILE_SIZE/1.1, TILE_SIZE/10 , player.img.width/0.9 , player.img.height/1.7)
-  
-
-        } 
-      if(self.isClothingOn){
-          var clothingImg = new Image()
-          clothingImg.src = "./img/"+player.id +"AttackClothing.png";
-          ctx.drawImage(clothingImg, walk * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height) 
-          playerLook.drawImage(clothingImg, walkingMod * frameWidth, 2 * self.frameHeight, frameWidth, self.frameHeight, TILE_SIZE/1.1, TILE_SIZE/10 , player.img.width/0.9 , player.img.height/1.7)
-  
-        }
-
-
-
-
-
-
-
-
-
-
+/*
+    
     } else if (self === player && player.isRaging){
       var walk = Math.floor(self.rageAnimeCounter/25)
       ctx.drawImage(self.img, walk * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height) 
@@ -535,29 +556,10 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
       ctx.drawImage(self.img, walkingMod * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height)
         
 
-      if(player.isClothingOn){
-        var clothingImg2 = new Image();
-        clothingImg2.src = "./img/"+player.id +"Clothing.png";
-        ctx.drawImage(clothingImg2, walkingMod * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height)
-        playerLook.drawImage(clothingImg2, walkingMod * frameWidth, 2 * self.frameHeight, frameWidth, self.frameHeight, TILE_SIZE/1.1, TILE_SIZE/10 , player.img.width/0.9 , player.img.height/1.7)
-  
-      }
-    
-      if(player.isHatOn){ 
-        var hatImg2 = new Image();
-        hatImg2.src = "./img/"+player.id +"Hat" + player.hat+".png";
-        ctx.drawImage(hatImg2, walkingMod * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height)
-        // to draw Hats
-        ctx.drawImage(hatImg2, walkingMod * frameWidth, 2 * self.frameHeight, frameWidth, self.frameHeight/2, WIDTH*30.5/100 , HEIGHT*82/100, TILE_SIZE, TILE_SIZE*1.2)  
-        playerLook.drawImage(hatImg2, walkingMod * frameWidth, 2 * self.frameHeight, frameWidth, self.frameHeight, TILE_SIZE/1.1, TILE_SIZE/10 , player.img.width/0.9 , player.img.height/1.7)
-  
-
-      }  
-
-    } else if(self.isDamaged){
-    		var walk = Math.floor(self.damageAnimeCounter/25)
-      	ctx.drawImage(self.img, walk * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height) 
-    } else {                     
+*/  if(self.isDamaged && self !== player){
+    	var walk = Math.floor(self.damageAnimeCounter/25)
+      ctx.drawImage(self.img, walk * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height) 
+    } else if (self !== player) {                     
       ctx.drawImage(self.img, walkingMod * frameWidth, self.directionMod * self.frameHeight, frameWidth, self.frameHeight, x, y, self.width, self.height)
         
     }
@@ -570,12 +572,12 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
 	self.performAttack = function(){
     if(self.type === "player" && player.attackCounter > 25){
       player.isAttacking = true;
-      if(player.bulletType === "Rage"){
+      if(player.bulvarType === "Rage"){
         for(var key in enemyList ){
           if(enemyList[key].testCollision({x:player.x, y:player.y, width:player.width*8, height:player.height*8}))
             enemyList[key].isScared = true;
         } 
-      } else if (player.bulletType === "polymorf"){
+      } else if (player.bulvarType === "polymorf"){
         if( player.mana >= 100){
           player.mana -= 100;
           var x =  player.x + player.targetX;
@@ -588,7 +590,7 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
           }
         }
       } else {                 
-        generateBullet(self, self.aimAngle, self.bulletType);
+        generateBulvar(self, self.aimAngle, self.bulvarType);
       }
       self.attackCounter = 0; 
     } else {
@@ -599,9 +601,9 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
         	self.img = Img.attackImg;
           self.speed = 0;
           if(self.attackCounter === 28)
-            generateBullet(self, self.aimAngle, self.bulletType);
+            generateBulvar(self, self.aimAngle, self.bulvarType);
           if(self.attackCounter === 44)
-            generateBullet(self, self.aimAngle, self.bulletType);
+            generateBulvar(self, self.aimAngle, self.bulvarType);
         } 
 
         if (self.attackCounter > 50){
@@ -647,11 +649,11 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
         	self.img = Img.attackImg;
         	self.speed = 0;
         	if(self.attackCounter === 44)
-          	generateEffect(self.bulletType, player.x, player.y);                       
+          	generateEffect(self.bulvarType, player.x, player.y);                       
         	if(self.attackCounter === 46)
-        		generateEffect(self.bulletType, player.x+6, player.y-6);
+        		generateEffect(self.bulvarType, player.x+6, player.y-6);
         	if(self.attackCounter === 48)
-          	generateEffect(self.bulletType, player.x-4, player.y-6);
+          	generateEffect(self.bulvarType, player.x-4, player.y-6);
       	} 
 
       	if (self.attackCounter > 49){
@@ -662,7 +664,7 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
         	self.speed = self.startSpeed;
       	} 
     	} else if (self.attackClass === "targetSpell") {
-          if(self.bulletType === "raiseDead" && self.attackCounter > 50 && !self.isCasting ){
+          if(self.bulvarType === "raiseDead" && self.attackCounter > 50 && !self.isCasting ){
             
             for(var key in corpseList){
               if(corpseList[key].testCollision({x:self.x - TILE_SIZE*2, y:self.y - TILE_SIZE*2, width:TILE_SIZE*4, height:TILE_SIZE*4})){
@@ -692,33 +694,33 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
   }
        
   self.performSpecialAttack = function(){
-    if(player.bulletType2 === "frostball"){
+    if(player.bulvarType2 === "frostball"){
       if(self.attackCounter > 50 && self.mana >= 20){    //every 1 sec
         self.attackCounter = 0;
         player.isAttacking = true;
         self.mana -= 20;
-        generateBullet(self,self.aimAngle - 5, self.bulletType2);
-        generateBullet(self,self.aimAngle, self.bulletType2);
-        generateBullet(self,self.aimAngle + 5, self.bulletType2);
+        generateBulvar(self,self.aimAngle - 5, self.bulvarType2);
+        generateBulvar(self,self.aimAngle, self.bulvarType2);
+        generateBulvar(self,self.aimAngle + 5, self.bulvarType2);
       }
-    } else if (player.bulletType2 ==="fireball"){
-      if(self.attackCounter > 50 && self.mana >= 20){    //every 1 sec
+    } else if (player.bulvarType2 ==="fireball"){
+      if(self.attackCounter > 50 && self.mana >= 180){    //every 1 sec
       	self.attackCounter = 0;
       	player.isAttacking = true;
         self.mana -= 180;
         var angle = 0;
         while (angle < 360){
-          generateBullet(self, angle, self.bulletType2);
+          generateBulvar(self, angle, self.bulvarType2);
           angle +=10;  
       	}
       }       
-    } else if(player.bulletType2 === "Rage"){
+    } else if(player.bulvarType2 === "Rage"){
       player.isRaging = true;     
-    } else if(player.bulletType2 === "Giant Sword"){
+    } else if(player.bulvarType2 === "Giant Sword"){
       if(self.attackCounter > 50 && self.mana >= 20){
         self.mana -= 20;
         player.isAttacking = true;
-        generateBullet(self,self.aimAngle, self.bulletType2);
+        generateBulvar(self,self.aimAngle, self.bulvarType2);
       }
     }
   }       
