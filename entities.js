@@ -590,7 +590,7 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
           }
         }
       } else {                 
-        generateBulvar(self, self.aimAngle, self.bulvarType);
+        generateBullet(self, self.aimAngle, self.bulvarType);
       }
       self.attackCounter = 0; 
     } else {
@@ -601,9 +601,9 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
         	self.img = Img.attackImg;
           self.speed = 0;
           if(self.attackCounter === 28)
-            generateBulvar(self, self.aimAngle, self.bulvarType);
+            generateBullet(self, self.aimAngle, self.bulvarType);
           if(self.attackCounter === 44)
-            generateBulvar(self, self.aimAngle, self.bulvarType);
+            generateBullet(self, self.aimAngle, self.bulvarType);
         } 
 
         if (self.attackCounter > 50){
@@ -699,9 +699,9 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
         self.attackCounter = 0;
         player.isAttacking = true;
         self.mana -= 20;
-        generateBulvar(self,self.aimAngle - 5, self.bulvarType2);
-        generateBulvar(self,self.aimAngle, self.bulvarType2);
-        generateBulvar(self,self.aimAngle + 5, self.bulvarType2);
+        generateBullet(self,self.aimAngle - 5, self.bulvarType2);
+        generateBullet(self,self.aimAngle, self.bulvarType2);
+        generateBullet(self,self.aimAngle + 5, self.bulvarType2);
       }
     } else if (player.bulvarType2 ==="fireball"){
       if(self.attackCounter > 50 && self.mana >= 180){    //every 1 sec
@@ -710,7 +710,7 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
         self.mana -= 180;
         var angle = 0;
         while (angle < 360){
-          generateBulvar(self, angle, self.bulvarType2);
+          generateBullet(self, angle, self.bulvarType2);
           angle +=10;  
       	}
       }       
@@ -720,7 +720,7 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
       if(self.attackCounter > 50 && self.mana >= 20){
         self.mana -= 20;
         player.isAttacking = true;
-        generateBulvar(self,self.aimAngle, self.bulvarType2);
+        generateBullet(self,self.aimAngle, self.bulvarType2);
       }
     }
   }       
