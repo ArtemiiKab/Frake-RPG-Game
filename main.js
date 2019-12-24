@@ -460,7 +460,7 @@ startGame = function () {
 
 startNewGame = function () {
 	hideDeathMenu();
-	currentMap = mapList["location1"];
+	currentMap = mapList["dungeon1"];
 	player.dead = false;
 	player.deathCause = "Wow, you're still alive, that's impressive... Are you sure you want to leave?"
 	player.hp = player.hpMax;
