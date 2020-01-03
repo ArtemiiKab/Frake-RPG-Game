@@ -38,7 +38,7 @@ Player = function(type, id, x, y, width, height, img, hp, mana, AC, constitution
   self.lvl = 1;
   self.lvlUpCounter = 0;
   self.isLeveling = false;
-  self.xp = 700; 
+  self.xp = 0; 
   self.xpMax = 1000;
   self.isSkillChanged = false;  
 
