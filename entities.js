@@ -491,7 +491,7 @@ Actor = function(type,id,x,y,width,height,img,hp, mana, AC, constitution, streng
     		Img.damageImg = new Image();
       	Img.damageImg.src = `./img/`+ self.id+`Damaged.png`  
       	self.img = Img.damageImg;                  
-      } else if(self.id !=="npc") {
+      } else if(self.name !=="npc") {
       	self.isPolymorfed = false;
       	self.width = 90;
         self.height = 90
